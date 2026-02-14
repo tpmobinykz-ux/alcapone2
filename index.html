@@ -9,15 +9,14 @@
 body{
   margin:0;
   font-family:tahoma;
-  background:#000 url('ALCAPONE_BG.jpg') center/cover fixed;
+  background:#000;
   color:#f5d37a;
 }
 .overlay{
-  background:rgba(0,0,0,.75);
   min-height:100vh;
+  background:rgba(0,0,0,.75);
 }
 .glass{
-  backdrop-filter:blur(10px);
   background:rgba(0,0,0,.6);
   border:1px solid #d4af37;
   border-radius:15px;
@@ -27,47 +26,41 @@ body{
 }
 input,button{
   width:100%;
-  margin:8px 0;
   padding:10px;
+  margin:8px 0;
   border-radius:8px;
   border:none;
 }
 button{
   background:#d4af37;
-  color:#000;
   font-weight:bold;
-  cursor:pointer;
 }
 .hidden{display:none}
 
-/* ✅ ALCAPONE LOGO (REGISTER) */
+/* LOGO */
 .alcapone-logo{
   text-align:center;
   font-size:42px;
-  font-weight:700;
   letter-spacing:6px;
-  color:#d4af37;
   margin-bottom:15px;
-  font-family:"Segoe UI","Trebuchet MS",Arial,sans-serif;
+  color:#d4af37;
+  font-family:Arial,Helvetica,sans-serif;
 }
 
-/* ✅ LOBBY BAR */
+/* LOBBY BAR */
 .lobby-bar{
   display:flex;
   justify-content:space-between;
   background:rgba(0,0,0,.7);
   padding:10px;
   border-radius:10px;
-  margin-bottom:15px;
 }
-
 .big-logo{
   position:fixed;
   bottom:20px;
   width:100%;
   text-align:center;
   font-size:48px;
-  letter-spacing:10px;
   opacity:.15;
 }
 </style>
@@ -81,7 +74,7 @@ button{
   <h2 id="authTitle">ورود</h2>
 
   <!-- LOGIN -->
-  <div id="login">
+  <div id="loginBox">
     <input id="lUser" placeholder="نام کاربری">
     <input id="lPass" type="password" placeholder="رمز عبور">
     <button type="button" onclick="login()">ورود</button>
@@ -89,38 +82,22 @@ button{
   </div>
 
   <!-- REGISTER -->
-  <div id="register" class="hidden">
+  <div id="registerBox" class="hidden">
     <div class="alcapone-logo">ALCAPONE</div>
-
     <input id="rUser" placeholder="نام کاربری">
     <input id="rPass" type="password" placeholder="رمز عبور">
-    <input id="rBirth" type="date">
-
     <button type="button" onclick="register()">ثبت‌نام</button>
     <p onclick="switchAuth()">ورود</p>
   </div>
 </div>
 
-<!-- ✅ LOBBY -->
+<!-- LOBBY -->
 <div id="lobby" class="glass hidden">
   <div class="lobby-bar">
     <span id="playerName">👤</span>
     <span id="playerMoney">💰 0 | 💎 0</span>
   </div>
-
-  <h2>🎩 لابی Alcapone 2</h2>
-  <p>❌ فحاشی = بن | ❌ قسم ممنوع</p>
-
-  <button onclick="openReports()">📬 گزارش</button>
-  <button onclick="openAdmin()">🛠️ ادمین</button>
-</div>
-
-<!-- ADMIN -->
-<div id="admin" class="glass hidden">
-  <h3>Admin Panel</h3>
-  <input id="adminPass" placeholder="رمز ادمین">
-  <button onclick="adminLogin()">ورود</button>
-  <div id="adminPanel" class="hidden"></div>
+  <h2>🎩 لابی Alcapone</h2>
 </div>
 
 <div class="big-logo">ALCAPONE</div>
@@ -129,45 +106,47 @@ button{
 <script>
 /* DATA */
 let users = JSON.parse(localStorage.getItem("users") || "[]");
-let reports = JSON.parse(localStorage.getItem("reports") || "[]");
 let current = null;
 
-/* AUTH SWITCH */
+/* SWITCH AUTH */
 function switchAuth(){
-  login.classList.toggle("hidden");
-  register.classList.toggle("hidden");
-  authTitle.innerText =
-    login.classList.contains("hidden") ? "ثبت‌نام" : "ورود";
+  const loginBox = document.getElementById("loginBox");
+  const registerBox = document.getElementById("registerBox");
+  const title = document.getElementById("authTitle");
+
+  loginBox.classList.toggle("hidden");
+  registerBox.classList.toggle("hidden");
+
+  title.innerText =
+    loginBox.classList.contains("hidden") ? "ثبت‌نام" : "ورود";
 }
 
 /* REGISTER */
 function register(){
-  const u = rUser.value.trim();
-  const p = rPass.value.trim();
-  const b = rBirth.value;
+  const u = document.getElementById("rUser").value.trim();
+  const p = document.getElementById("rPass").value.trim();
 
-  if(!u || !p || !b) return alert("همه فیلدها الزامی است");
+  if(!u || !p) return alert("همه فیلدها الزامی است");
   if(users.find(x=>x.u===u)) return alert("نام کاربری تکراری است");
 
   users.push({
-    u,p,b,
+    u,p,
     coins:100,
     diamonds:5,
-    rank:"برنز",
     ban:false
   });
 
-  save();
-  alert("اکانت ساخته شد");
+  localStorage.setItem("users", JSON.stringify(users));
+  alert("ثبت‌نام انجام شد");
   switchAuth();
 }
 
-/* ✅ LOGIN → LOBBY */
+/* LOGIN (✅ قطعی) */
 function login(){
-  const u = lUser.value.trim();
-  const p = lPass.value.trim();
+  const u = document.getElementById("lUser").value.trim();
+  const p = document.getElementById("lPass").value.trim();
 
-  let user = users.find(x=>x.u===u && x.p===p);
+  const user = users.find(x=>x.u===u && x.p===p);
   if(!user) return alert("نام کاربری یا رمز اشتباه است");
   if(user.ban) return alert("اکانت شما بن شده");
 
@@ -176,60 +155,9 @@ function login(){
   document.getElementById("auth").classList.add("hidden");
   document.getElementById("lobby").classList.remove("hidden");
 
-  playerName.innerText = `👤 ${user.u}`;
-  playerMoney.innerText = `💰 ${user.coins} | 💎 ${user.diamonds}`;
-}
-
-/* SAVE */
-function save(){
-  localStorage.setItem("users", JSON.stringify(users));
-  localStorage.setItem("reports", JSON.stringify(reports));
-}
-
-/* REPORT */
-function openReports(){
-  let t = prompt("گزارش خود را بنویس:");
-  if(t){
-    reports.push({from:current.u,text:t});
-    save();
-    alert("ارسال شد");
-  }
-}
-
-/* ADMIN */
-function openAdmin(){
-  admin.classList.remove("hidden");
-}
-
-function adminLogin(){
-  if(adminPass.value!=="tp_mfia") return alert("رمز اشتباه");
-
-  let html="<h4>کاربران</h4>";
-  users.forEach((u,i)=>{
-    html+=`${u.u} | 💰 ${u.coins}
-    <button onclick="ban(${i})">Ban</button><br>`;
-  });
-
-  html+="<h4>گزارشات</h4>";
-  reports.forEach((r,i)=>{
-    html+=`${r.from}: ${r.text}
-    <button onclick="delRep(${i})">X</button><br>`;
-  });
-
-  adminPanel.innerHTML=html;
-  adminPanel.classList.remove("hidden");
-}
-
-function ban(i){
-  users[i].ban=true;
-  save();
-  adminLogin();
-}
-
-function delRep(i){
-  reports.splice(i,1);
-  save();
-  adminLogin();
+  document.getElementById("playerName").innerText = `👤 ${user.u}`;
+  document.getElementById("playerMoney").innerText =
+    `💰 ${user.coins} | 💎 ${user.diamonds}`;
 }
 </script>
 
