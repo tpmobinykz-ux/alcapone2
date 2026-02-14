@@ -21,30 +21,19 @@ body{
   border:1px solid #d4af37;
   border-radius:15px;
   padding:20px;
-  max-width:400px;
+  max-width:420px;
   margin:40px auto;
 }
-input,button{
-  width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:8px;
-  border:none;
-}
-button{
-  background:#d4af37;
-  font-weight:bold;
-}
-.hidden{display:none}
 
 /* LOGO */
-.alcapone-logo{
+.big-logo{
+  position:fixed;
+  bottom:20px;
+  width:100%;
   text-align:center;
-  font-size:42px;
+  font-size:48px;
+  opacity:.15;
   letter-spacing:6px;
-  margin-bottom:15px;
-  color:#d4af37;
-  font-family:Arial,Helvetica,sans-serif;
 }
 
 /* LOBBY BAR */
@@ -54,14 +43,16 @@ button{
   background:rgba(0,0,0,.7);
   padding:10px;
   border-radius:10px;
+  margin-bottom:15px;
 }
-.big-logo{
-  position:fixed;
-  bottom:20px;
+button{
   width:100%;
-  text-align:center;
-  font-size:48px;
-  opacity:.15;
+  padding:12px;
+  border:none;
+  border-radius:8px;
+  background:#d4af37;
+  font-weight:bold;
+  margin-top:10px;
 }
 </style>
 </head>
@@ -69,95 +60,41 @@ button{
 <body>
 <div class="overlay">
 
-<!-- AUTH -->
-<div id="auth" class="glass">
-  <h2 id="authTitle">ورود</h2>
-
-  <!-- LOGIN -->
-  <div id="loginBox">
-    <input id="lUser" placeholder="نام کاربری">
-    <input id="lPass" type="password" placeholder="رمز عبور">
-    <button type="button" onclick="login()">ورود</button>
-    <p onclick="switchAuth()">ثبت‌نام</p>
-  </div>
-
-  <!-- REGISTER -->
-  <div id="registerBox" class="hidden">
-    <div class="alcapone-logo">ALCAPONE</div>
-    <input id="rUser" placeholder="نام کاربری">
-    <input id="rPass" type="password" placeholder="رمز عبور">
-    <button type="button" onclick="register()">ثبت‌نام</button>
-    <p onclick="switchAuth()">ورود</p>
-  </div>
-</div>
-
 <!-- LOBBY -->
-<div id="lobby" class="glass hidden">
+<div id="lobby" class="glass">
   <div class="lobby-bar">
     <span id="playerName">👤</span>
     <span id="playerMoney">💰 0 | 💎 0</span>
   </div>
-  <h2>🎩 لابی Alcapone</h2>
+
+  <h2>🎩 لابی ALCAPONE</h2>
+  <p>به بازی خوش آمدید</p>
+
+  <button onclick="startGame()">🎮 شروع بازی</button>
 </div>
 
 <div class="big-logo">ALCAPONE</div>
 </div>
 
 <script>
-/* DATA */
-let users = JSON.parse(localStorage.getItem("users") || "[]");
-let current = null;
+/* PLAYER DATA (موقت / پیش‌فرض) */
+const player = {
+  username: "Mobinykz",
+  coins: 1000,
+  diamonds: 25,
+  level: 1
+};
 
-/* SWITCH AUTH */
-function switchAuth(){
-  const loginBox = document.getElementById("loginBox");
-  const registerBox = document.getElementById("registerBox");
-  const title = document.getElementById("authTitle");
+/* LOAD LOBBY */
+document.getElementById("playerName").innerText =
+  `👤 ${player.username}`;
 
-  loginBox.classList.toggle("hidden");
-  registerBox.classList.toggle("hidden");
+document.getElementById("playerMoney").innerText =
+  `💰 ${player.coins} | 💎 ${player.diamonds}`;
 
-  title.innerText =
-    loginBox.classList.contains("hidden") ? "ثبت‌نام" : "ورود";
-}
-
-/* REGISTER */
-function register(){
-  const u = document.getElementById("rUser").value.trim();
-  const p = document.getElementById("rPass").value.trim();
-
-  if(!u || !p) return alert("همه فیلدها الزامی است");
-  if(users.find(x=>x.u===u)) return alert("نام کاربری تکراری است");
-
-  users.push({
-    u,p,
-    coins:100,
-    diamonds:5,
-    ban:false
-  });
-
-  localStorage.setItem("users", JSON.stringify(users));
-  alert("ثبت‌نام انجام شد");
-  switchAuth();
-}
-
-/* LOGIN (✅ قطعی) */
-function login(){
-  const u = document.getElementById("lUser").value.trim();
-  const p = document.getElementById("lPass").value.trim();
-
-  const user = users.find(x=>x.u===u && x.p===p);
-  if(!user) return alert("نام کاربری یا رمز اشتباه است");
-  if(user.ban) return alert("اکانت شما بن شده");
-
-  current = user;
-
-  document.getElementById("auth").classList.add("hidden");
-  document.getElementById("lobby").classList.remove("hidden");
-
-  document.getElementById("playerName").innerText = `👤 ${user.u}`;
-  document.getElementById("playerMoney").innerText =
-    `💰 ${user.coins} | 💎 ${user.diamonds}`;
+/* START GAME */
+function startGame(){
+  alert("🎮 ورود به اتاق بازی (مرحله بعدی)");
 }
 </script>
 
