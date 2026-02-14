@@ -2,217 +2,649 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>آل‌کاپون ۲ - نسخه حرفه‌ای</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALCAPONE - The Mafia Game</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
+        /* **تنظیمات رنگ و فونت** */
         :root {
-            --gold: #d4af37;
-            --dark-gold: #b8860b;
-            --bg-color: #0a0a0a;
-            --panel-bg: rgba(20, 20, 20, 0.95);
+            --dark-background: #0d0d0d;
+            --gold: #d4af37; /* رنگ طلایی شیک */
+            --gold-light: #e6c24f;
+            --font-family: 'Arial', sans-serif;
         }
 
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            font-family: 'Tahoma', sans-serif;
-            background-color: var(--bg-color);
-            color: white; overflow: hidden;
-        }
-
-        .hidden { display: none !important; }
-
-        /* --- صفحه ورود --- */
-        #auth-screen {
-            height: 100%;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: radial-gradient(circle, #222 0%, #000 100%);
-        }
-
-        .auth-card {
-            background: var(--panel-bg);
-            padding: 30px; border-radius: 20px; border: 1px solid var(--gold);
-            text-align: center; width: 80%; max-width: 350px;
-        }
-
-        input {
-            width: 100%; padding: 12px; margin: 10px 0;
-            border-radius: 10px; border: 1px solid #444; background: #111; color: white;
-            box-sizing: border-box; text-align: center;
-        }
-
-        .btn-gold {
-            width: 100%; padding: 12px; background: linear-gradient(to bottom, var(--gold), var(--dark-gold));
-            border: none; border-radius: 10px; color: black; font-weight: bold; cursor: pointer;
-        }
-
-        /* --- لابی اصلی (مشابه اسکرین‌شات) --- */
-        #lobby-screen {
-            width: 100%; height: 100%;
-            background: url('https://w0.peakpx.com/wallpaper/137/914/HD-wallpaper-godfather-mafia.jpg') no-repeat center center;
+        /* **استایل کلی و پس‌زمینه (تصویر تامی شلبی)** */
+        body {
+            background: url('BG_ALCAPONE.jpg') no-repeat center center fixed; /* **استفاده از پس‌زمینه جدید** */
             background-size: cover;
+            color: white;
+            height: 100vh;
+            overflow: hidden;
+            font-family: var(--font-family);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin: 0;
             position: relative;
-            display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        /* نوار بالا */
+        /* **لایه تیره‌کننده روی تصویر برای خوانایی بهتر متن** */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6); /* لایه نیمه‌شفاف مشکی */
+            backdrop-filter: blur(2px);
+            z-index: 0;
+        }
+
+        /* **کادر اصلی لابی** */
+        #app {
+            position: relative;
+            z-index: 1;
+            width: 90%;
+            max-width: 1000px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.4);
+            background-color: rgba(13, 13, 13, 0.8); /* پس‌زمینه کمی شفاف‌تر */
+        }
+
+        /* **فرم ورود و ثبت نام** */
+        #auth-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+        }
+
+        #auth-view h1 {
+            color: var(--gold-light);
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        #auth-view input {
+            background-color: var(--dark-background);
+            border: 1px solid var(--gold);
+            color: white;
+            padding: 10px;
+            margin: 8px 0;
+            width: 80%;
+            max-width: 300px;
+            font-size: 1em;
+        }
+
+        /* **دکمه‌های عمومی** */
+        .btn-gold {
+            background-color: var(--gold);
+            color: var(--dark-background);
+            border: none;
+            padding: 10px 20px;
+            margin: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-gold:hover {
+            background-color: var(--gold-light);
+            transform: scale(1.05);
+        }
+
+        /* **استایل لابی (مشابه اسکرین‌شات‌های مافیایی)** */
+        #lobby-view {
+            display: none;
+            flex-grow: 1;
+            position: relative;
+        }
+
+        /* **نوار بالایی (اطلاعات کاربر و منابع)** */
         .top-bar {
-            height: 60px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
-            display: flex; justify-content: space-between; align-items: center; padding: 0 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-bottom: 1px solid var(--gold);
         }
 
-        .profile-tag {
-            background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 15px;
-            border: 1px solid var(--gold); font-size: 14px;
+        .user-info, .resources {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
-        .stats { display: flex; gap: 10px; }
-        .stat-box {
-            background: rgba(0,0,0,0.6); padding: 3px 10px; border-radius: 10px;
-            border: 0.5px solid #555; font-size: 13px; display: flex; align-items: center; gap: 5px;
+        .rank-badge {
+            color: var(--gold-light);
+            border: 1px solid var(--gold);
+            padding: 5px 10px;
+            font-size: 1.1em;
+            font-weight: bold;
         }
 
-        /* منوی کناری */
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gold-light);
+        }
+
+        /* **منوی کناری (تروفی‌ها، پشتیبانی، فروشگاه)** */
         .side-menu {
-            position: absolute; right: 15px; top: 80px; display: flex; flex-direction: column; gap: 15px;
+            position: absolute;
+            top: 60px;
+            bottom: 80px;
+            width: 150px;
+            padding: 10px 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-left: 1px solid var(--gold);
+        }
+        
+        #right-menu {
+            left: 0;
+            border-right: 1px solid var(--gold);
+            border-left: none;
+        }
+
+        #left-menu {
+            right: 0;
         }
 
         .menu-item {
-            width: 65px; height: 65px; background: var(--panel-bg);
-            border: 1px solid var(--gold); border-radius: 12px;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            font-size: 10px; cursor: pointer;
+            padding: 15px 10px;
+            cursor: pointer;
+            color: var(--gold-light);
+            transition: background-color 0.3s;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            font-size: 1em;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
         }
 
-        /* بخش پایین */
-        .bottom-area {
-            padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            text-align: center;
+        .menu-item:hover {
+            background-color: rgba(212, 175, 55, 0.1);
         }
 
-        .trophy-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
-
-        .game-actions { display: flex; gap: 10px; width: 100%; }
-        .btn-play {
-            flex: 1; padding: 18px; border-radius: 15px; border: 2px solid #5e4a28;
-            font-weight: bold; font-size: 18px; cursor: pointer;
+        .menu-item i {
+            font-size: 1.5em;
         }
-        .ranked { background: linear-gradient(to bottom, var(--gold), var(--dark-gold)); color: #222; }
-        .friendly { background: #333; color: white; border-color: #555; }
 
-        /* پنل ادمین (Modal) */
-        #admin-modal {
-            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 90%; max-width: 400px; background: #1a1a1a; border: 2px solid red;
-            border-radius: 20px; padding: 20px; z-index: 1000;
+        /* **محتوای اصلی (دکمه شروع بازی)** */
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+        }
+
+        .game-buttons-bottom {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 30px;
+        }
+
+        #start-game-btn {
+            font-size: 1.8em;
+            padding: 15px 40px;
+        }
+
+        /* **مدال‌ها (Modal - برای صندوق و پنل مدیریت)** */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+        }
+
+        .modal-content {
+            background-color: var(--dark-background);
+            margin: 10% auto;
+            padding: 20px;
+            border: 2px solid var(--gold);
+            width: 80%;
+            max-width: 600px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+        }
+
+        .close-btn {
+            color: var(--gold);
+            float: left;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .report-item {
+            border-bottom: 1px dashed var(--gold);
+            padding: 10px 0;
+            text-align: right;
+            margin-bottom: 5px;
+        }
+        
+        .report-item button {
+            margin-top: 5px;
+        }
+
+        .admin-controls input, .admin-controls button {
+            margin: 5px;
+        }
+
+        #admin-access-btn {
+            display: none; /* تا زمانی که رمز ادمین وارد نشود، پنهان است */
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-<!-- صفحه ورود -->
-<div id="auth-screen">
-    <div class="auth-card">
-        <h2 style="color:var(--gold)">ورود به آل‌کاپون ۲</h2>
-        <input type="text" id="username" placeholder="نام کاربری">
-        <input type="password" id="password" placeholder="رمز عبور">
-        <input type="text" id="bday" placeholder="سال تولد">
-        <button class="btn-gold" onclick="handleAuth()">تایید و ورود</button>
-    </div>
-</div>
+    <div id="app">
+        <!-- **نمای ورود و ثبت نام** -->
+        <div id="auth-view">
+            <h1>ALCAPONE</h1>
+            <div id="message" style="color: red; margin-bottom: 15px;"></div>
+            
+            <input type="text" id="username" placeholder="نام کاربری (انگلیسی)" required>
+            <input type="password" id="password" placeholder="رمز عبور" required>
+            <input type="date" id="birthdate" title="تاریخ تولد" style="text-align: right;">
+            
+            <button class="btn-gold" onclick="register()">ثبت نام</button>
+            <button class="btn-gold" onclick="login()">ورود</button>
 
-<!-- لابی اصلی -->
-<div id="lobby-screen" class="hidden">
-    <div class="top-bar">
-        <div class="profile-tag">✏️ <span id="user-name-label">کاربر</span></div>
-        <div class="stats">
-            <div class="stat-box"><span style="color:magenta">💎</span> <span id="gems-val">1</span></div>
-            <div class="stat-box"><span style="color:gold">🪙</span> <span id="coins-val">218</span></div>
+            <!-- **دکمه دسترسی ادمین (مخفی)** -->
+            <button class="btn-gold" id="admin-access-btn" onclick="openAdminPanel()">پنل مدیریت</button>
+        </div>
+
+        <!-- **نمای لابی اصلی** -->
+        <div id="lobby-view">
+            
+            <!-- نوار بالا: اطلاعات کاربر و منابع -->
+            <div class="top-bar">
+                <div class="user-info">
+                    <span class="rank-badge" id="user-rank">Rank: Rookie</span>
+                    <span id="welcome-user"></span>
+                </div>
+                <div class="resources">
+                    <div class="resource-item">
+                        <i class="fas fa-coins"></i>
+                        <span id="user-coins">0</span>
+                    </div>
+                    <div class="resource-item">
+                        <i class="fas fa-gem"></i>
+                        <span id="user-gems">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- منوی کناری سمت راست (پشتیبانی، مدیریت) -->
+            <div class="side-menu" id="right-menu">
+                <div class="menu-item" onclick="openSupportModal()">
+                    <i class="fas fa-headset"></i>
+                    <span>پشتیبانی</span>
+                </div>
+                <!-- دکمه پنل مدیریت در اینجا هم می‌تواند قرار گیرد -->
+                <!-- <div class="menu-item" onclick="openAdminPanel()">
+                    <i class="fas fa-user-shield"></i>
+                    <span>مدیریت</span>
+                </div> -->
+                <div class="menu-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>جوایز</span>
+                </div>
+            </div>
+
+            <!-- منوی کناری سمت چپ (فروشگاه، تنظیمات) -->
+            <div class="side-menu" id="left-menu">
+                <div class="menu-item">
+                    <i class="fas fa-store"></i>
+                    <span>فروشگاه</span>
+                </div>
+                <div class="menu-item">
+                    <i class="fas fa-cog"></i>
+                    <span>تنظیمات</span>
+                </div>
+            </div>
+
+            <!-- محتوای اصلی -->
+            <div class="main-content">
+                <!-- می‌توانید در اینجا انیمیشن یا اطلاعات برجسته دیگری قرار دهید -->
+                <p style="font-size: 2em; color: var(--gold-light);">Welcome to the Mafia World</p>
+            </div>
+
+            <!-- دکمه‌های بازی در پایین -->
+            <div class="game-buttons-bottom">
+                <button class="btn-gold" id="start-game-btn">شروع بازی</button>
+                <button class="btn-gold" onclick="logout()">خروج</button>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- **مدال صندوق پشتیبانی (گزارشات)** -->
+    <div id="supportModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('supportModal')">&times;</span>
+            <h2>ارسال پیام پشتیبانی</h2>
+            <textarea id="support-message" rows="4" style="width: 95%; margin-bottom: 10px; padding: 10px; background-color: var(--dark-background); color: white; border: 1px solid var(--gold);" placeholder="متن پیام شما..."></textarea>
+            <button class="btn-gold" onclick="submitSupportMessage()">ارسال پیام</button>
+            <p id="support-status" style="margin-top: 10px; color: var(--gold);"></p>
         </div>
     </div>
 
-    <div class="side-menu">
-        <div class="menu-item">💰<br>فروشگاه</div>
-        <div class="menu-item">🎧<br>پشتیبانی</div>
-        <div id="admin-btn" class="menu-item hidden" style="border-color: red; color: red;" onclick="toggleAdmin(true)">⚙️<br>مدیریت</div>
+    <!-- **مدال پنل مدیریت** -->
+    <div id="adminModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('adminModal')">&times;</span>
+            <h2>پنل مدیریت (Admin Panel)</h2>
+            
+            <div id="admin-prompt" style="text-align: center; margin-bottom: 15px;">
+                <p>برای دسترسی کامل، رمز سازنده را وارد کنید:</p>
+                <input type="password" id="admin-pass-input" placeholder="رمز سازنده" style="width: 200px;">
+                <button class="btn-gold" onclick="verifyAdminPass()">تأیید</button>
+            </div>
+
+            <div id="admin-content" style="display: none;">
+                <h3>صندوق گزارشات کاربران:</h3>
+                <div id="reports-list" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--gold); padding: 10px;">
+                    <!-- گزارشات اینجا اضافه می‌شوند -->
+                    <p style="color: gray;">صندوق پیام‌های پشتیبانی خالی است.</p>
+                </div>
+                <hr style="border-color: var(--gold); margin: 20px 0;">
+                
+                <h3>مدیریت منابع (موقت):</h3>
+                <div class="admin-controls">
+                    <input type="text" id="target-username" placeholder="نام کاربری هدف">
+                    <input type="number" id="coin-amount" placeholder="مقدار سکه جدید">
+                    <button class="btn-gold" onclick="updateUserCoins()">اعمال سکه</button>
+                    <p id="admin-status" style="color: var(--gold); margin-top: 10px;"></p>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="bottom-area">
-        <div class="trophy-row">
-            <span style="font-size: 30px;">🥉</span>
-            <span style="font-size: 50px; margin-top:-10px">🥇</span>
-            <span style="font-size: 30px;">🥈</span>
-        </div>
-        <div class="game-actions">
-            <button class="btn-play ranked" onclick="alert('جستجوی بازی امتیازی...')">بازی امتیازی</button>
-            <button class="btn-play friendly" onclick="alert('ساخت اتاق دوستانه...')">بازی دوستانه</button>
-        </div>
-        <p style="font-size: 12px; color: #777; margin-top: 10px;" onclick="location.reload()">خروج از حساب کاربری</p>
-    </div>
-</div>
+    <script>
+        const ADMIN_CODE = 'tp_mfia';
 
-<!-- مودال مدیریت -->
-<div id="admin-modal" class="hidden">
-    <h3 style="color:red; text-align:center;">پنل مدیریت ادمین</h3>
-    <input type="text" id="target-user" placeholder="نام کاربر هدف">
-    <input type="number" id="new-coins" placeholder="تعداد سکه جدید">
-    <button class="btn-gold" onclick="updateUser()">اعمال تغییرات</button>
-    <button class="btn-gold" style="background:gray; margin-top:10px" onclick="toggleAdmin(false)">بستن</button>
-</div>
-
-<script>
-    let currentUser = null;
-
-    function handleAuth() {
-        const u = document.getElementById('username').value;
-        const p = document.getElementById('password').value;
-        if(!u || !p) return alert("لطفا همه فیلدها را پر کنید");
-
-        let users = JSON.parse(localStorage.getItem('game_users') || '{}');
-
-        if(!users[u]) {
-            users[u] = { pass: p, coins: 218, gems: 1, isAdmin: (p === 'tp_mfia') };
-            localStorage.setItem('game_users', JSON.stringify(users));
+        // ** مدیریت Local Storage و کاربران **
+        function getUsers() {
+            return JSON.parse(localStorage.getItem('users')) || {};
         }
 
-        if(users[u].pass === p) {
-            currentUser = u;
-            loadLobby(users[u]);
-        } else {
-            alert("رمز عبور اشتباه است!");
+        function saveUsers(users) {
+            localStorage.setItem('users', JSON.stringify(users));
         }
-    }
 
-    function loadLobby(data) {
-        document.getElementById('auth-screen').classList.add('hidden');
-        document.getElementById('lobby-screen').classList.remove('hidden');
-        document.getElementById('user-name-label').innerText = currentUser;
-        document.getElementById('coins-val').innerText = data.coins;
-        document.getElementById('gems-val').innerText = data.gems;
-
-        if(data.isAdmin) {
-            document.getElementById('admin-btn').classList.remove('hidden');
+        function getCurrentUser() {
+            const username = localStorage.getItem('currentUser');
+            if (username) {
+                return getUsers()[username];
+            }
+            return null;
         }
-    }
 
-    function toggleAdmin(show) {
-        document.getElementById('admin-modal').classList.toggle('hidden', !show);
-    }
-
-    function updateUser() {
-        const target = document.getElementById('target-user').value;
-        const newCoins = document.getElementById('new-coins').value;
-        let users = JSON.parse(localStorage.getItem('game_users'));
-
-        if(users[target]) {
-            users[target].coins = newCoins;
-            localStorage.setItem('game_users', JSON.stringify(users));
-            alert("سکه کاربر " + target + " تغییر کرد.");
-            if(target === currentUser) location.reload();
-        } else {
-            alert("کاربر پیدا نشد.");
+        function saveCurrentUser(user) {
+            const users = getUsers();
+            users[user.username] = user;
+            saveUsers(users);
+            localStorage.setItem('currentUser', user.username);
         }
-    }
-</script>
+
+        // ** توابع ورود و ثبت نام **
+        function register() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const birthdate = document.getElementById('birthdate').value;
+            const messageEl = document.getElementById('message');
+            
+            if (!username || !password || !birthdate) {
+                messageEl.textContent = 'لطفاً تمام فیلدها را پر کنید.';
+                return;
+            }
+
+            const users = getUsers();
+            if (users[username]) {
+                messageEl.textContent = 'این نام کاربری قبلاً ثبت شده است.';
+                return;
+            }
+
+            const newUser = {
+                username: username,
+                password: password,
+                birthdate: birthdate,
+                rank: 'Rookie',
+                score: 0,
+                coins: 500, // موجودی اولیه
+                gems: 10,
+                isAdmin: false // پیش‌فرض
+            };
+
+            saveCurrentUser(newUser);
+            messageEl.textContent = 'ثبت نام موفقیت آمیز بود. در حال ورود...';
+            setTimeout(loadLobby, 1000);
+        }
+
+        function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const messageEl = document.getElementById('message');
+            
+            if (!username || !password) {
+                messageEl.textContent = 'لطفاً نام کاربری و رمز عبور را وارد کنید.';
+                return;
+            }
+
+            const users = getUsers();
+            const user = users[username];
+
+            if (user && user.password === password) {
+                localStorage.setItem('currentUser', username);
+                messageEl.textContent = 'ورود موفقیت آمیز.';
+                if (password === ADMIN_CODE) { // اگر رمز ادمین وارد شده
+                    document.getElementById('admin-access-btn').style.display = 'block';
+                } else {
+                    document.getElementById('admin-access-btn').style.display = 'none';
+                }
+                setTimeout(loadLobby, 1000);
+            } else {
+                messageEl.textContent = 'نام کاربری یا رمز عبور اشتباه است.';
+                document.getElementById('admin-access-btn').style.display = 'none';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('currentUser');
+            document.getElementById('lobby-view').style.display = 'none';
+            document.getElementById('auth-view').style.display = 'flex';
+            document.getElementById('admin-access-btn').style.display = 'none';
+            document.getElementById('message').textContent = 'از حساب کاربری خارج شدید.';
+        }
+
+        // ** مدیریت لابی **
+        function loadLobby() {
+            const user = getCurrentUser();
+
+            if (!user) {
+                logout(); // اگر کاربر تعریف نشده بود، خارج شود
+                return;
+            }
+
+            document.getElementById('auth-view').style.display = 'none';
+            document.getElementById('lobby-view').style.display = 'flex';
+
+            document.getElementById('welcome-user').textContent = `خوش آمدید، ${user.username}`;
+            document.getElementById('user-rank').textContent = `Rank: ${user.rank}`;
+            document.getElementById('user-coins').textContent = user.coins;
+            document.getElementById('user-gems').textContent = user.gems;
+        }
+
+        // ** مدیریت مدال‌ها **
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        // ** مدیریت صندوق پشتیبانی (گزارشات) **
+        function openSupportModal() {
+            document.getElementById('supportModal').style.display = 'block';
+            document.getElementById('support-status').textContent = '';
+            document.getElementById('support-message').value = '';
+        }
+
+        function getReports() {
+            return JSON.parse(localStorage.getItem('reports')) || [];
+        }
+
+        function saveReports(reports) {
+            localStorage.setItem('reports', JSON.stringify(reports));
+        }
+
+        function submitSupportMessage() {
+            const user = getCurrentUser();
+            const message = document.getElementById('support-message').value.trim();
+            const statusEl = document.getElementById('support-status');
+
+            if (!message) {
+                statusEl.textContent = 'لطفاً پیام خود را بنویسید.';
+                return;
+            }
+
+            const reports = getReports();
+            const newReport = {
+                id: Date.now(),
+                username: user.username,
+                message: message,
+                date: new Date().toLocaleString('fa-IR')
+            };
+
+            reports.push(newReport);
+            saveReports(reports);
+
+            statusEl.textContent = 'پیام شما با موفقیت ارسال شد. در اسرع وقت رسیدگی می‌شود.';
+            document.getElementById('support-message').value = '';
+        }
+
+        // ** مدیریت پنل ادمین **
+        function openAdminPanel() {
+            document.getElementById('adminModal').style.display = 'block';
+            // فرض می‌کنیم که اگر دکمه فعال شده، رمز ادمین در ورودی auth-view درست بوده است
+            // اما برای امنیت بیشتر، اجازه دسترسی به محتوا فقط پس از تأیید مجدد داده می‌شود.
+            document.getElementById('admin-content').style.display = 'none';
+            document.getElementById('admin-prompt').style.display = 'block';
+            document.getElementById('admin-pass-input').value = '';
+        }
+
+        function verifyAdminPass() {
+            const inputPass = document.getElementById('admin-pass-input').value;
+            if (inputPass === ADMIN_CODE) {
+                document.getElementById('admin-prompt').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                renderReports();
+            } else {
+                alert('رمز سازنده اشتباه است.');
+            }
+        }
+
+        function renderReports() {
+            const reports = getReports();
+            const listEl = document.getElementById('reports-list');
+            listEl.innerHTML = '';
+
+            if (reports.length === 0) {
+                listEl.innerHTML = '<p style="color: gray;">صندوق پیام‌های پشتیبانی خالی است.</p>';
+                return;
+            }
+
+            reports.forEach(report => {
+                const div = document.createElement('div');
+                div.className = 'report-item';
+                div.innerHTML = `
+                    <p><strong>کاربر:</strong> ${report.username}</p>
+                    <p><strong>تاریخ:</strong> ${report.date}</p>
+                    <p><strong>پیام:</strong> ${report.message}</p>
+                    <button class="btn-gold" style="float: left;" onclick="deleteReport(${report.id})">حذف</button>
+                    <div style="clear: both;"></div>
+                `;
+                listEl.appendChild(div);
+            });
+        }
+
+        function deleteReport(id) {
+            let reports = getReports();
+            reports = reports.filter(report => report.id !== id);
+            saveReports(reports);
+            renderReports();
+        }
+
+        function updateUserCoins() {
+            const targetUsername = document.getElementById('target-username').value.trim();
+            const coinAmount = parseInt(document.getElementById('coin-amount').value);
+            const statusEl = document.getElementById('admin-status');
+
+            if (!targetUsername || isNaN(coinAmount)) {
+                statusEl.textContent = 'لطفاً نام کاربری و مقدار معتبر سکه را وارد کنید.';
+                statusEl.style.color = 'red';
+                return;
+            }
+
+            const users = getUsers();
+            if (!users[targetUsername]) {
+                statusEl.textContent = `کاربری با نام ${targetUsername} یافت نشد.`;
+                statusEl.style.color = 'red';
+                return;
+            }
+
+            users[targetUsername].coins = coinAmount;
+            saveUsers(users);
+            
+            // اگر کاربری که ادمین سکه‌اش را تغییر داد، خودش لاگین باشد، لابی به‌روز شود
+            if (getCurrentUser().username === targetUsername) {
+                loadLobby(); 
+            }
+
+            statusEl.textContent = `سکه کاربر ${targetUsername} به ${coinAmount} به‌روزرسانی شد.`;
+            statusEl.style.color = 'var(--gold)';
+        }
+
+
+        // ** بررسی وضعیت ورود در هنگام بارگذاری صفحه **
+        window.onload = function() {
+            if (getCurrentUser()) {
+                loadLobby();
+                // چک کردن برای نمایش دکمه ادمین در صورت وجود رمز سازنده
+                const user = getCurrentUser();
+                if (user.password === ADMIN_CODE) {
+                    document.getElementById('admin-access-btn').style.display = 'block';
+                }
+            } else {
+                document.getElementById('auth-view').style.display = 'flex';
+                document.getElementById('lobby-view').style.display = 'none';
+            }
+        }
+    </script>
 
 </body>
 </html>
