@@ -2,14 +2,14 @@
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>AL CAPONE – Zodiac Mafia</title>
+<title>ALCAPONE 2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.json">
+
 <style>
 body{
   margin:0;
   font-family:tahoma;
-  background:url('ALCAPONE_BG.jpg') center/cover fixed;
+  background:#000 url('ALCAPONE_BG.jpg') center/cover fixed;
   color:#f5d37a;
 }
 .overlay{
@@ -34,10 +34,33 @@ input,button{
 }
 button{
   background:#d4af37;
-  color:black;
+  color:#000;
   font-weight:bold;
+  cursor:pointer;
 }
-.gold{color:#d4af37}
+.hidden{display:none}
+
+/* ✅ ALCAPONE LOGO (REGISTER) */
+.alcapone-logo{
+  text-align:center;
+  font-size:42px;
+  font-weight:700;
+  letter-spacing:6px;
+  color:#d4af37;
+  margin-bottom:15px;
+  font-family:"Segoe UI","Trebuchet MS",Arial,sans-serif;
+}
+
+/* ✅ LOBBY BAR */
+.lobby-bar{
+  display:flex;
+  justify-content:space-between;
+  background:rgba(0,0,0,.7);
+  padding:10px;
+  border-radius:10px;
+  margin-bottom:15px;
+}
+
 .big-logo{
   position:fixed;
   bottom:20px;
@@ -45,9 +68,8 @@ button{
   text-align:center;
   font-size:48px;
   letter-spacing:10px;
-  opacity:.2;
+  opacity:.15;
 }
-.hidden{display:none}
 </style>
 </head>
 
@@ -56,105 +78,160 @@ button{
 
 <!-- AUTH -->
 <div id="auth" class="glass">
-<h2 id="authTitle">ورود</h2>
+  <h2 id="authTitle">ورود</h2>
 
-<div id="login">
-<input id="lUser" placeholder="نام کاربری">
-<input id="lPass" type="password" placeholder="رمز عبور">
-<button onclick="login()">ورود</button>
-<p onclick="switchAuth()">ثبت‌نام</p>
+  <!-- LOGIN -->
+  <div id="login">
+    <input id="lUser" placeholder="نام کاربری">
+    <input id="lPass" type="password" placeholder="رمز عبور">
+    <button type="button" onclick="login()">ورود</button>
+    <p onclick="switchAuth()">ثبت‌نام</p>
+  </div>
+
+  <!-- REGISTER -->
+  <div id="register" class="hidden">
+    <div class="alcapone-logo">ALCAPONE</div>
+
+    <input id="rUser" placeholder="نام کاربری">
+    <input id="rPass" type="password" placeholder="رمز عبور">
+    <input id="rBirth" type="date">
+
+    <button type="button" onclick="register()">ثبت‌نام</button>
+    <p onclick="switchAuth()">ورود</p>
+  </div>
 </div>
 
-<div id="register" class="hidden">
-<input id="rUser" placeholder="نام کاربری">
-<input id="rPass" type="password" placeholder="رمز عبور">
-<input id="rBirth" type="date">
-<button onclick="register()">ثبت‌نام</button>
-<p onclick="switchAuth()">ورود</p>
-</div>
-</div>
-
-<!-- LOBBY -->
+<!-- ✅ LOBBY -->
 <div id="lobby" class="glass hidden">
-<h2>🎩 لابی AL CAPONE</h2>
-<p>❌ فحاشی = بن | ❌ قسم ممنوع</p>
-<p id="userInfo"></p>
-<button onclick="openReports()">📬 گزارش</button>
-<button onclick="openAdmin()">🛠️ ادمین</button>
+  <div class="lobby-bar">
+    <span id="playerName">👤</span>
+    <span id="playerMoney">💰 0 | 💎 0</span>
+  </div>
+
+  <h2>🎩 لابی Alcapone 2</h2>
+  <p>❌ فحاشی = بن | ❌ قسم ممنوع</p>
+
+  <button onclick="openReports()">📬 گزارش</button>
+  <button onclick="openAdmin()">🛠️ ادمین</button>
 </div>
 
 <!-- ADMIN -->
 <div id="admin" class="glass hidden">
-<h3>Admin Panel</h3>
-<input id="adminPass" placeholder="رمز ادمین">
-<button onclick="adminLogin()">ورود</button>
-<div id="adminPanel" class="hidden"></div>
+  <h3>Admin Panel</h3>
+  <input id="adminPass" placeholder="رمز ادمین">
+  <button onclick="adminLogin()">ورود</button>
+  <div id="adminPanel" class="hidden"></div>
 </div>
 
 <div class="big-logo">ALCAPONE</div>
 </div>
 
 <script>
-let users=JSON.parse(localStorage.getItem("users")||"[]");
-let reports=JSON.parse(localStorage.getItem("reports")||"[]");
-let current=null;
+/* DATA */
+let users = JSON.parse(localStorage.getItem("users") || "[]");
+let reports = JSON.parse(localStorage.getItem("reports") || "[]");
+let current = null;
 
+/* AUTH SWITCH */
 function switchAuth(){
-login.classList.toggle("hidden");
-register.classList.toggle("hidden");
-authTitle.innerText=login.classList.contains("hidden")?"ثبت‌نام":"ورود";
+  login.classList.toggle("hidden");
+  register.classList.toggle("hidden");
+  authTitle.innerText =
+    login.classList.contains("hidden") ? "ثبت‌نام" : "ورود";
 }
 
+/* REGISTER */
 function register(){
-if(!rUser.value||!rPass.value||!rBirth.value)return alert("همه فیلدها لازم است");
-if(users.find(u=>u.u==rUser.value))return alert("تکراری");
-users.push({u:rUser.value,p:rPass.value,b:rBirth.value,coins:100,rank:"برنز",ban:false});
-save();
-alert("ثبت شد");
-switchAuth();
+  const u = rUser.value.trim();
+  const p = rPass.value.trim();
+  const b = rBirth.value;
+
+  if(!u || !p || !b) return alert("همه فیلدها الزامی است");
+  if(users.find(x=>x.u===u)) return alert("نام کاربری تکراری است");
+
+  users.push({
+    u,p,b,
+    coins:100,
+    diamonds:5,
+    rank:"برنز",
+    ban:false
+  });
+
+  save();
+  alert("اکانت ساخته شد");
+  switchAuth();
 }
 
+/* ✅ LOGIN → LOBBY */
 function login(){
-let u=users.find(x=>x.u==lUser.value&&x.p==lPass.value);
-if(!u)return alert("غلط");
-if(u.ban)return alert("بن شدی");
-current=u;
-auth.classList.add("hidden");
-lobby.classList.remove("hidden");
-userInfo.innerText=`👤 ${u.u} | 💰 ${u.coins} | 🏆 ${u.rank}`;
+  const u = lUser.value.trim();
+  const p = lPass.value.trim();
+
+  let user = users.find(x=>x.u===u && x.p===p);
+  if(!user) return alert("نام کاربری یا رمز اشتباه است");
+  if(user.ban) return alert("اکانت شما بن شده");
+
+  current = user;
+
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("lobby").classList.remove("hidden");
+
+  playerName.innerText = `👤 ${user.u}`;
+  playerMoney.innerText = `💰 ${user.coins} | 💎 ${user.diamonds}`;
 }
 
+/* SAVE */
 function save(){
-localStorage.setItem("users",JSON.stringify(users));
-localStorage.setItem("reports",JSON.stringify(reports));
+  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("reports", JSON.stringify(reports));
 }
 
+/* REPORT */
 function openReports(){
-let t=prompt("گزارش:");
-if(t){reports.push({from:current.u,text:t});save();alert("ارسال شد");}
+  let t = prompt("گزارش خود را بنویس:");
+  if(t){
+    reports.push({from:current.u,text:t});
+    save();
+    alert("ارسال شد");
+  }
 }
 
+/* ADMIN */
 function openAdmin(){
-admin.classList.remove("hidden");
+  admin.classList.remove("hidden");
 }
 
 function adminLogin(){
-if(adminPass.value!=="tp_mfia")return alert("غلط");
-let html="<h4>کاربران</h4>";
-users.forEach((u,i)=>{
-html+=`${u.u} | ${u.rank} | ${u.coins}
-<button onclick="ban(${i})">Ban</button>
-<button onclick="kick()">Kick</button><br>`;
-});
-html+="<h4>گزارشات</h4>";
-reports.forEach((r,i)=>html+=`${r.from}: ${r.text}<button onclick="delRep(${i})">X</button><br>`);
-adminPanel.innerHTML=html;
-adminPanel.classList.remove("hidden");
+  if(adminPass.value!=="tp_mfia") return alert("رمز اشتباه");
+
+  let html="<h4>کاربران</h4>";
+  users.forEach((u,i)=>{
+    html+=`${u.u} | 💰 ${u.coins}
+    <button onclick="ban(${i})">Ban</button><br>`;
+  });
+
+  html+="<h4>گزارشات</h4>";
+  reports.forEach((r,i)=>{
+    html+=`${r.from}: ${r.text}
+    <button onclick="delRep(${i})">X</button><br>`;
+  });
+
+  adminPanel.innerHTML=html;
+  adminPanel.classList.remove("hidden");
 }
 
-function ban(i){users[i].ban=true;save();adminLogin();}
-function delRep(i){reports.splice(i,1);save();adminLogin();}
-function kick(){alert("Kick (online logic later)");}
+function ban(i){
+  users[i].ban=true;
+  save();
+  adminLogin();
+}
+
+function delRep(i){
+  reports.splice(i,1);
+  save();
+  adminLogin();
+}
 </script>
+
 </body>
 </html>
