@@ -1,209 +1,160 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALCAPONE - Mafia Game</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        :root {
-            --gold: #d4af37;
-            --dark-gold: #aa8a2e;
-            --black: #0a0a0a;
-            --glass: rgba(0, 0, 0, 0.8);
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Tahoma', sans-serif;
-            background-color: var(--black);
-            color: white;
-            overflow: hidden;
-        }
-
-        /* پس‌زمینه با تصویر تامی شلبی */
-        .bg-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('ALCAPONE_BG.jpg') no-repeat center center;
-            background-size: cover;
-            z-index: -1;
-            filter: brightness(0.6);
-        }
-
-        /* لایه رویی برای متن ALCAPONE */
-        .brand-overlay {
-            position: absolute;
-            bottom: 5%;
-            width: 100%;
-            text-align: center;
-            font-size: 5rem;
-            font-weight: 900;
-            letter-spacing: 15px;
-            color: rgba(255, 255, 255, 0.1);
-            text-transform: uppercase;
-            pointer-events: none;
-            font-family: 'Arial Black', sans-serif;
-        }
-
-        .auth-overlay, .lobby-overlay {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: radial-gradient(circle, transparent, var(--black));
-        }
-
-        .glass-card {
-            background: var(--glass);
-            padding: 2.5rem;
-            border-radius: 20px;
-            border: 1px solid var(--gold);
-            box-shadow: 0 0 30px rgba(212, 175, 55, 0.2);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .gold-text { color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
-        
-        .btn-gold {
-            background: linear-gradient(45deg, var(--dark-gold), var(--gold));
-            border: none;
-            color: black;
-            font-weight: bold;
-            padding: 12px 30px;
-            border-radius: 50px;
-            transition: 0.3s;
-            width: 100%;
-            margin-top: 15px;
-        }
-
-        .btn-gold:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px var(--gold);
-            color: black;
-        }
-
-        .input-dark {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid #333;
-            color: white;
-            text-align: center;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            padding: 12px;
-        }
-
-        .input-dark:focus {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--gold);
-            color: white;
-            box-shadow: none;
-        }
-
-        .lobby-ui {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
-            display: flex;
-            justify-content: space-between;
-            pointer-events: none;
-        }
-
-        .stat-box {
-            background: var(--glass);
-            padding: 10px 20px;
-            border-radius: 15px;
-            border-left: 4px solid var(--gold);
-            pointer-events: all;
-        }
-
-        .admin-badge {
-            cursor: pointer;
-            color: var(--gold);
-            font-size: 0.8rem;
-            text-decoration: none;
-            margin-top: 10px;
-            display: inline-block;
-        }
-
-        .modal-content {
-            background: #111;
-            border: 1px solid var(--gold);
-            color: white;
-        }
-
-        #reportList .list-group-item {
-            background: #222;
-            color: white;
-            border: 1px solid #333;
-            margin-bottom: 5px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>AL CAPONE – Zodiac Mafia</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<style>
+body{
+  margin:0;
+  font-family:tahoma;
+  background:url('ALCAPONE_BG.jpg') center/cover fixed;
+  color:#f5d37a;
+}
+.overlay{
+  background:rgba(0,0,0,.75);
+  min-height:100vh;
+}
+.glass{
+  backdrop-filter:blur(10px);
+  background:rgba(0,0,0,.6);
+  border:1px solid #d4af37;
+  border-radius:15px;
+  padding:20px;
+  max-width:400px;
+  margin:40px auto;
+}
+input,button{
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+button{
+  background:#d4af37;
+  color:black;
+  font-weight:bold;
+}
+.gold{color:#d4af37}
+.big-logo{
+  position:fixed;
+  bottom:20px;
+  width:100%;
+  text-align:center;
+  font-size:48px;
+  letter-spacing:10px;
+  opacity:.2;
+}
+.hidden{display:none}
+</style>
 </head>
+
 <body>
+<div class="overlay">
 
-    <div class="bg-container"></div>
-    <div class="brand-overlay">ALCAPONE</div>
+<!-- AUTH -->
+<div id="auth" class="glass">
+<h2 id="authTitle">ورود</h2>
 
-    <!-- بخش ورود و ثبت‌نام -->
-    <div id="authSection" class="auth-overlay">
-        <div class="glass-card">
-            <h2 class="gold-text mb-4">ورود به عمارت</h2>
-            <div id="loginForm">
-                <input type="text" id="username" class="form-control input-dark" placeholder="نام کاربری">
-                <input type="password" id="password" class="form-control input-dark" placeholder="رمز عبور">
-                <button class="btn-gold" onclick="login()">ورود</button>
-                <p class="mt-3">عضو نیستید؟ <a href="#" onclick="toggleAuth(false)" class="gold-text">ثبت‌نام کنید</a></p>
-            </div>
-            <div id="registerForm" style="display: none;">
-                <input type="text" id="regUsername" class="form-control input-dark" placeholder="نام کاربری جدید">
-                <input type="password" id="regPassword" class="form-control input-dark" placeholder="رمز عبور (هر چیزی)">
-                <button class="btn-gold" onclick="register()">ایجاد حساب</button>
-                <p class="mt-3">قبلاً ثبت‌نام کردید؟ <a href="#" onclick="toggleAuth(true)" class="gold-text">وارد شوید</a></p>
-            </div>
-        </div>
-    </div>
+<div id="login">
+<input id="lUser" placeholder="نام کاربری">
+<input id="lPass" type="password" placeholder="رمز عبور">
+<button onclick="login()">ورود</button>
+<p onclick="switchAuth()">ثبت‌نام</p>
+</div>
 
-    <!-- لابی بازی -->
-    <div id="lobbySection" class="lobby-overlay" style="display: none;">
-        <div class="lobby-ui">
-            <div class="stat-box">
-                <div><i class="fas fa-coins gold-text"></i> سکه: <span id="userCoins">0</span></div>
-                <div><i class="fas fa-trophy gold-text"></i> رتبه: <span id="userRank">نوپا</span></div>
-            </div>
-            <div class="stat-box text-end">
-                <div id="displayUsername" class="gold-text fw-bold">کاربر</div>
-                <div onclick="logout()" style="cursor:pointer; font-size: 0.8rem;">خروج <i class="fas fa-sign-out-alt"></i></div>
-            </div>
-        </div>
+<div id="register" class="hidden">
+<input id="rUser" placeholder="نام کاربری">
+<input id="rPass" type="password" placeholder="رمز عبور">
+<input id="rBirth" type="date">
+<button onclick="register()">ثبت‌نام</button>
+<p onclick="switchAuth()">ورود</p>
+</div>
+</div>
 
-        <div class="text-center" style="z-index: 10;">
-            <button class="btn-gold btn-lg px-5 py-3 mb-3" style="font-size: 1.5rem;">
-                <i class="fas fa-play me-2"></i> شروع بازی
-            </button>
-            <br>
-            <button class="btn btn-outline-light rounded-pill px-4" onclick="openSupport()">
-                <i class="fas fa-headset"></i> پشتیبانی و گزارشات
-            </button>
-            <br>
-            <a href="#" class="admin-badge" onclick="promptAdmin()">ADMIN AREA</a>
-        </div>
-    </div>
+<!-- LOBBY -->
+<div id="lobby" class="glass hidden">
+<h2>🎩 لابی AL CAPONE</h2>
+<p>❌ فحاشی = بن | ❌ قسم ممنوع</p>
+<p id="userInfo"></p>
+<button onclick="openReports()">📬 گزارش</button>
+<button onclick="openAdmin()">🛠️ ادمین</button>
+</div>
 
-    <!-- مودال پشتیبانی (برای کاربر) -->
-    <div class="modal fade" id="supportModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header border-gold">
-                    <h5 class="modal-title gold-text">ارسال گزارش به ادمین</h5>
-                    <button type="button" class
+<!-- ADMIN -->
+<div id="admin" class="glass hidden">
+<h3>Admin Panel</h3>
+<input id="adminPass" placeholder="رمز ادمین">
+<button onclick="adminLogin()">ورود</button>
+<div id="adminPanel" class="hidden"></div>
+</div>
+
+<div class="big-logo">ALCAPONE</div>
+</div>
+
+<script>
+let users=JSON.parse(localStorage.getItem("users")||"[]");
+let reports=JSON.parse(localStorage.getItem("reports")||"[]");
+let current=null;
+
+function switchAuth(){
+login.classList.toggle("hidden");
+register.classList.toggle("hidden");
+authTitle.innerText=login.classList.contains("hidden")?"ثبت‌نام":"ورود";
+}
+
+function register(){
+if(!rUser.value||!rPass.value||!rBirth.value)return alert("همه فیلدها لازم است");
+if(users.find(u=>u.u==rUser.value))return alert("تکراری");
+users.push({u:rUser.value,p:rPass.value,b:rBirth.value,coins:100,rank:"برنز",ban:false});
+save();
+alert("ثبت شد");
+switchAuth();
+}
+
+function login(){
+let u=users.find(x=>x.u==lUser.value&&x.p==lPass.value);
+if(!u)return alert("غلط");
+if(u.ban)return alert("بن شدی");
+current=u;
+auth.classList.add("hidden");
+lobby.classList.remove("hidden");
+userInfo.innerText=`👤 ${u.u} | 💰 ${u.coins} | 🏆 ${u.rank}`;
+}
+
+function save(){
+localStorage.setItem("users",JSON.stringify(users));
+localStorage.setItem("reports",JSON.stringify(reports));
+}
+
+function openReports(){
+let t=prompt("گزارش:");
+if(t){reports.push({from:current.u,text:t});save();alert("ارسال شد");}
+}
+
+function openAdmin(){
+admin.classList.remove("hidden");
+}
+
+function adminLogin(){
+if(adminPass.value!=="tp_mfia")return alert("غلط");
+let html="<h4>کاربران</h4>";
+users.forEach((u,i)=>{
+html+=`${u.u} | ${u.rank} | ${u.coins}
+<button onclick="ban(${i})">Ban</button>
+<button onclick="kick()">Kick</button><br>`;
+});
+html+="<h4>گزارشات</h4>";
+reports.forEach((r,i)=>html+=`${r.from}: ${r.text}<button onclick="delRep(${i})">X</button><br>`);
+adminPanel.innerHTML=html;
+adminPanel.classList.remove("hidden");
+}
+
+function ban(i){users[i].ban=true;save();adminLogin();}
+function delRep(i){reports.splice(i,1);save();adminLogin();}
+function kick(){alert("Kick (online logic later)");}
+</script>
+</body>
+</html>
