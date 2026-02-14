@@ -1,0 +1,16 @@
+{
+  "name": "Al Capone 2",
+  "short_name": "AlCapone2",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#00ffd0",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/tpmobinykz-ux/alcapone2/main/icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
