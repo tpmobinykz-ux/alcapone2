@@ -3,49 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Al Capone 2 - PWA</title>
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#000000">
+    <title>پنل بازی آل‌کاپون ۲</title>
     <style>
-        body { background: #000; color: #fff; text-align: center; font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; height: 100vh; margin: 0; }
-        .btn { background: #00ffd0; color: #000; padding: 15px 30px; border-radius: 10px; text-decoration: none; font-weight: bold; margin: 10px; display: inline-block; cursor: pointer; border: none; font-size: 18px; }
-        h1 { color: #00ffd0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0d1117;
+            color: #c9d1d9;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #58a6ff;
+            font-size: 2.5rem;
+            text-shadow: 0 0 10px rgba(88, 166, 255, 0.3);
+        }
+        .card {
+            background: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .card:hover {
+            border-color: #58a6ff;
+            transform: translateY(-5px);
+        }
+        .btn-main {
+            background-color: #238636;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            width: 100%;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .content-area {
+            display: none;
+            text-align: right;
+            background: #21262d;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+            border-right: 4px solid #58a6ff;
+        }
+        .active { display: block; }
+        .role-badge {
+            background: #388bfd26;
+            color: #58a6ff;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
+
+<div class="container">
     <h1>Al Capone 2</h1>
-    <p>نسخه وب اپلیکیشن آماده نصب است</p>
-    
-    <!-- این دکمه فقط وقتی ظاهر می‌شود که مرورگر آماده نصب باشد -->
-    <button id="install-btn" class="btn" style="display:none;">نصب روی گوشی (PWA)</button>
-    
-    <a href="https://t.me/your_bot" class="btn">ورود به بازی در تلگرام</a>
+    <p>مدیریت هوشمند بازی مافیا (نسخه وب)</p>
 
-    <script>
-        // ثبت سرویس ورکر برای PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
+    <div class="card" onclick="toggle('rules')">
+        <h3>📜 قوانین بازی (زودیاک)</h3>
+        <div id="rules" class="content-area">
+            <ul>
+                <li>رعایت ادب و احترام الزامی است.</li>
+                <li>توهین نژادی یا جنسیتی مساوی با اخراج مستقیم (Ban) است.</li>
+                <li>افشای نقش در طول بازی ممنوع است.</li>
+                <li>زمان صحبت برای هر نفر ۶۰ ثانیه می‌باشد.</li>
+            </ul>
+        </div>
+    </div>
 
-        let deferredPrompt;
-        const installBtn = document.getElementById('install-btn');
+    <div class="card" onclick="toggle('roles')">
+        <h3>🎭 معرفی نقش‌ها</h3>
+        <div id="roles" class="content-area">
+            <p><span class="role-badge">کارگاه:</span> هر شب استعلام یک نفر را می‌گیرد.</p>
+            <p><span class="role-badge">دکتر:</span> ناجی شهر در برابر شلیک مافیا.</p>
+            <p><span class="role-badge">آل‌کاپون:</span> رئیس کل مافیا و تصمیم‌گیرنده نهایی.</p>
+            <p><span class="role-badge">زودیاک:</span> نقش مستقل که به تنهایی برنده می‌شود.</p>
+        </div>
+    </div>
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'inline-block';
-        });
+    <div class="card" onclick="toggle('start')">
+        <h3>🎮 شروع سناریو</h3>
+        <div id="start" class="content-area">
+            <p>در حال آماده‌سازی زیرساخت قرعه‌کشی نقش‌ها...</p>
+            <button class="btn-main" onclick="alert('به زودی فعال می‌شود!')">ایجاد اتاق جدید</button>
+        </div>
+    </div>
 
-        installBtn.addEventListener('click', () => {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                deferredPrompt.userChoice.then((choiceResult) => {
-                    if (choiceResult.outcome === 'accepted') {
-                        installBtn.style.display = 'none';
-                    }
-                });
-            }
-        });
-    </script>
+    <a href="https://t.me/your_bot" class="btn-main">ورود به ربات تلگرام</a>
+</div>
+
+<script>
+    function toggle(id) {
+        const element = document.getElementById(id);
+        const isVisible = element.style.display === 'block';
+        
+        // بستن بقیه
+        document.querySelectorAll('.content-area').forEach(el => el.style.display = 'none');
+        
+        // باز کردن فعلی
+        element.style.display = isVisible ? 'none' : 'block';
+    }
+</script>
+
 </body>
 </html>
