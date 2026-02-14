@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Capone 2 - PWA</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#000000">
+    <style>
+        body { background: #000; color: #fff; text-align: center; font-family: sans-serif; display: flex; flex-direction: column; justify-content: center; height: 100vh; margin: 0; }
+        .btn { background: #00ffd0; color: #000; padding: 15px 30px; border-radius: 10px; text-decoration: none; font-weight: bold; margin: 10px; display: inline-block; cursor: pointer; border: none; font-size: 18px; }
+        h1 { color: #00ffd0; }
+    </style>
+</head>
+<body>
+    <h1>Al Capone 2</h1>
+    <p>نسخه وب اپلیکیشن آماده نصب است</p>
+    
+    <!-- این دکمه فقط وقتی ظاهر می‌شود که مرورگر آماده نصب باشد -->
+    <button id="install-btn" class="btn" style="display:none;">نصب روی گوشی (PWA)</button>
+    
+    <a href="https://t.me/your_bot" class="btn">ورود به بازی در تلگرام</a>
+
+    <script>
+        // ثبت سرویس ورکر برای PWA
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+
+        let deferredPrompt;
+        const installBtn = document.getElementById('install-btn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'inline-block';
+        });
+
+        installBtn.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        installBtn.style.display = 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
