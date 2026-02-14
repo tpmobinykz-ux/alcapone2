@@ -3,276 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>پنل بازی آل‌کاپون ۲ - مدیریت</title>
+    <title>آل‌کاپون ۲ - نسخه زودیاک</title>
+    <link rel="manifest" href="manifest.json">
     <style>
         :root {
-            --bg-color: #0d1117;
-            --card-bg: #161b22;
-            --primary-blue: #58a6ff;
-            --text-color: #c9d1d9;
-            --accent-green: #238636;
-            --admin-red: #da3633;
+            --primary: #d4af37; /* طلایی زودیاک */
+            --bg-dark: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --text-color: #e0e0e0;
+            --danger: #ff4d4d;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Tahoma', sans-serif;
+            background-color: var(--bg-dark);
             color: var(--text-color);
             margin: 0;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+            overflow-x: hidden;
         }
 
-        /* بخش خوش‌آمدگویی و ثبت‌نام */
-        #auth-container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            margin-top: 50px;
-        }
-
-        .welcome-msg {
-            color: var(--primary-blue);
-            font-size: 1.5rem;
-            margin-bottom: 30px;
-            font-weight: bold;
-        }
-
-        .auth-card {
+        .container {
+            width: 90%;
+            max-width: 450px;
             background: var(--card-bg);
-            border: 1px solid #30363d;
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 20px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+            text-align: center;
         }
+
+        h1 { color: var(--primary); margin-bottom: 20px; font-size: 24px; }
 
         input {
             width: 100%;
             padding: 12px;
             margin: 10px 0;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 10px;
             color: white;
             box-sizing: border-box;
-            font-family: inherit;
             text-align: center;
         }
 
-        /* پنل اصلی بازی */
-        #main-panel, #admin-panel {
-            display: none;
+        input:focus { border-color: var(--primary); outline: none; }
+
+        button {
             width: 100%;
-            max-width: 500px;
-            text-align: center;
-        }
-
-        .user-info {
-            background: linear-gradient(145deg, #161b22, #0d1117);
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            border: 1px solid var(--primary-blue);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-        }
-
-        h1 {
-            color: var(--primary-blue);
-            font-size: 2.2rem;
-            text-shadow: 0 0 15px rgba(88, 166, 255, 0.4);
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
+            padding: 12px;
+            margin-top: 15px;
+            background: var(--primary);
+            color: black;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        .card:hover { border-color: var(--primary-blue); }
+        button:hover { transform: scale(1.02); opacity: 0.9; }
 
-        .btn-action {
-            background-color: var(--accent-green);
-            color: white;
-            border: none;
+        .hidden { display: none; }
+
+        .admin-btn { background: var(--danger); color: white; margin-top: 20px; }
+
+        .rank-card {
+            background: #252525;
             padding: 15px;
-            border-radius: 10px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            width: 100%;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn-admin {
-            background-color: var(--admin-red);
-            margin-top: 20px;
-            display: none; /* فقط برای ادمین ظاهر می‌شود */
-        }
-
-        .rank-badge { color: #ffd700; font-weight: bold; }
-
-        .content-area {
-            display: none;
-            text-align: right;
-            background: #21262d;
-            padding: 15px;
-            border-radius: 10px;
-            margin-top: 10px;
-            border-right: 4px solid var(--primary-blue);
-        }
-
-        /* استایل پنل ادمین */
-        .admin-box {
-            background: #21262d;
-            padding: 20px;
             border-radius: 15px;
-            border: 2px dashed var(--admin-red);
             margin-top: 20px;
+            border-right: 5px solid var(--primary);
+        }
+
+        .blacklist-item {
+            color: var(--danger);
+            font-size: 14px;
+            background: rgba(255, 77, 77, 0.1);
+            padding: 5px;
+            margin: 5px 0;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
 
-    <!-- صفحه ورود و ثبت‌نام -->
-    <div id="auth-container">
-        <div class="welcome-msg">به اپلیکیشن مافیای آل‌کاپون خوش آمدید</div>
-        <div class="auth-card">
-            <h3>ساخت حساب کاربری</h3>
-            <input type="text" id="username" placeholder="نام کاربری">
-            <input type="password" id="password" placeholder="رمز عبور">
-            <input type="text" id="birthdate" placeholder="تاریخ تولد (مثلاً ۱۳۸۰/۰۱/۰۱)">
-            <button class="btn-action" onclick="register()">ایجاد اکانت و ورود</button>
-            <p style="font-size: 0.7rem; color: #8b949e; margin-top: 15px;">رمز سازنده برای دسترسی به پنل مدیریت الزامی است</p>
-        </div>
+<div class="container">
+    <div id="auth-section">
+        <h1>ورود به زودیاک</h1>
+        <input type="text" id="username" placeholder="نام کاربری">
+        <input type="password" id="password" placeholder="رمز عبور">
+        <input type="text" id="birthdate" placeholder="تاریخ تولد (مثال: ۱۳۸۰)">
+        <button onclick="handleAuth()">ثبت‌نام / ورود</button>
     </div>
 
-    <!-- پنل اصلی پس از ورود -->
-    <div id="main-panel">
-        <h1>Al Capone 2</h1>
+    <div id="main-section" class="hidden">
+        <h1 id="welcome-msg">خوش آمدید</h1>
+        <div class="rank-card">
+            <p>امتیاز (رنک): <span id="user-rank" style="color:var(--primary); font-weight:bold;">0</span></p>
+        </div>
         
-        <div class="user-info">
-            <div>نام: <span id="display-name" style="color: var(--primary-blue);"></span></div>
-            <div>رنک: <span class="rank-badge" id="user-rank">۰</span></div>
+        <div id="blacklist-section" class="hidden">
+            <h3 style="color:var(--danger)">لیست سیاه ادمین</h3>
+            <div id="blacklist-container"></div>
         </div>
 
-        <button class="btn-action" style="background-color: var(--primary-blue);" onclick="alert('در حال جستجوی لابی...')">🎮 شروع بازی</button>
-
-        <div class="card" onclick="toggle('rules')">
-            <h3>📜 قوانین زودیاک</h3>
-            <div id="rules" class="content-area">
-                <p>۱. احترام به تمام بازیکنان</p>
-                <p>۲. عدم افشای نقش</p>
-            </div>
-        </div>
-
-        <button class="btn-action btn-admin" id="admin-btn" onclick="openAdmin()">⚙️ پنل مدیریت سازنده</button>
-        
-        <button class="btn-action" onclick="window.location.href='https://t.me/your_bot'" style="background-color: #238636; margin-top: 20px;">ورود به ربات تلگرام</button>
-        
-        <p style="cursor:pointer; color: #484f58; margin-top: 20px;" onclick="logout()">خروج از حساب</p>
+        <button id="admin-panel-btn" class="admin-btn hidden" onclick="toggleAdmin()">پنل مدیریت</button>
+        <button onclick="logout()" style="background:#444; color:white;">خروج</button>
     </div>
 
-    <!-- پنل مدیریت (مخفی) -->
-    <div id="admin-panel">
-        <h1 style="color: var(--admin-red);">پنل مدیریت آل‌کاپون</h1>
-        <div class="admin-box">
-            <p>تغییر رنک بازیکن:</p>
-            <input type="number" id="new-rank" placeholder="امتیاز جدید را وارد کنید">
-            <button class="btn-action" onclick="updateRank()">ثبت امتیاز جدید</button>
-            <hr style="border: 0.5px solid #30363d; margin: 20px 0;">
-            <button class="btn-action" style="background-color: #8b949e;" onclick="closeAdmin()">بازگشت به بازی</button>
-            <button class="btn-action" style="background-color: var(--admin-red); margin-top: 10px;" onclick="resetAll()">ریست کل سیستم</button>
-        </div>
+    <!-- پنل ادمین -->
+    <div id="admin-controls" class="hidden" style="margin-top:20px; border-top:1px solid #444; padding-top:20px;">
+        <h2 style="color:var(--primary)">تنظیمات ادمین</h2>
+        <input type="text" id="target-user" placeholder="نام کاربری بازیکن">
+        <input type="number" id="new-rank" placeholder="امتیاز جدید">
+        <button onclick="updateRank()">بروزرسانی رنک</button>
+        <button onclick="addToBlacklist()" style="background:orange;">افزودن به لیست سیاه</button>
+        <button onclick="resetAll()" style="background:gray;">ریست کل دیتابیس</button>
     </div>
+</div>
 
-    <script>
-        const ADMIN_PASSWORD = "tp_mfia";
+<script>
+    let currentUser = null;
 
-        window.onload = function() {
-            const savedUser = localStorage.getItem('alcapone_user');
-            if (savedUser) {
-                showPanel(JSON.parse(savedUser));
+    function handleAuth() {
+        const user = document.getElementById('username').value;
+        const pass = document.getElementById('password').value;
+        const bday = document.getElementById('birthdate').value;
+
+        if(!user || !pass) return alert("فیلدها را پر کنید");
+
+        let users = JSON.parse(localStorage.getItem('users') || '{}');
+
+        if(!users[user]) {
+            users[user] = { 
+                pass: pass, 
+                rank: 0, 
+                bday: bday,
+                isAdmin: (pass === 'tp_mfia'),
+                isBanned: false
+            };
+            localStorage.setItem('users', JSON.stringify(users));
+        }
+
+        if(users[user].pass === pass) {
+            if(users[user].isBanned) return alert("شما در لیست سیاه هستید!");
+            currentUser = user;
+            showDashboard(users[user]);
+        } else {
+            alert("رمز اشتباه است");
+        }
+    }
+
+    function showDashboard(userData) {
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('main-section').classList.remove('hidden');
+        document.getElementById('welcome-msg').innerText = `سلام ${currentUser}`;
+        document.getElementById('user-rank').innerText = userData.rank;
+
+        if(userData.isAdmin) {
+            document.getElementById('admin-panel-btn').classList.remove('hidden');
+        }
+        renderBlacklist();
+    }
+
+    function toggleAdmin() {
+        const panel = document.getElementById('admin-controls');
+        panel.classList.toggle('hidden');
+    }
+
+    function updateRank() {
+        const target = document.getElementById('target-user').value;
+        const rank = document.getElementById('new-rank').value;
+        let users = JSON.parse(localStorage.getItem('users'));
+
+        if(users[target]) {
+            users[target].rank = rank;
+            localStorage.setItem('users', JSON.stringify(users));
+            alert("رنک آپدیت شد");
+        } else {
+            alert("کاربر یافت نشد");
+        }
+    }
+
+    function addToBlacklist() {
+        const target = document.getElementById('target-user').value;
+        let users = JSON.parse(localStorage.getItem('users'));
+        if(users[target]) {
+            users[target].isBanned = true;
+            localStorage.setItem('users', JSON.stringify(users));
+            renderBlacklist();
+            alert("کاربر مسدود شد");
+        }
+    }
+
+    function renderBlacklist() {
+        const container = document.getElementById('blacklist-container');
+        const section = document.getElementById('blacklist-section');
+        let users = JSON.parse(localStorage.getItem('users') || '{}');
+        container.innerHTML = "";
+        
+        let hasBanned = false;
+        for(let u in users) {
+            if(users[u].isBanned) {
+                container.innerHTML += `<div class="blacklist-item">${u} (مسدود)</div>`;
+                hasBanned = true;
             }
-        };
-
-        function register() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            const birth = document.getElementById('birthdate').value;
-
-            if (user && pass && birth) {
-                const userData = {
-                    name: user,
-                    rank: 1000,
-                    birth: birth,
-                    isAdmin: (pass === ADMIN_PASSWORD) // چک کردن رمز سازنده
-                };
-                localStorage.setItem('alcapone_user', JSON.stringify(userData));
-                showPanel(userData);
-            } else {
-                alert('تمام فیلدها را پر کنید');
-            }
         }
+        if(hasBanned) section.classList.remove('hidden');
+    }
 
-        function showPanel(data) {
-            document.getElementById('auth-container').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'none';
-            document.getElementById('main-panel').style.display = 'block';
-            document.getElementById('display-name').innerText = data.name;
-            document.getElementById('user-rank').innerText = data.rank;
-
-            if (data.isAdmin) {
-                document.getElementById('admin-btn').style.display = 'block';
-            }
-        }
-
-        function openAdmin() {
-            document.getElementById('main-panel').style.display = 'none';
-            document.getElementById('admin-panel').style.display = 'block';
-        }
-
-        function closeAdmin() {
-            document.getElementById('admin-panel').style.display = 'none';
-            document.getElementById('main-panel').style.display = 'block';
-        }
-
-        function updateRank() {
-            const newRank = document.getElementById('new-rank').value;
-            if (newRank) {
-                let userData = JSON.parse(localStorage.getItem('alcapone_user'));
-                userData.rank = newRank;
-                localStorage.setItem('alcapone_user', JSON.stringify(userData));
-                document.getElementById('user-rank').innerText = newRank;
-                alert('رنک با موفقیت تغییر کرد');
-                closeAdmin();
-            }
-        }
-
-        function resetAll() {
-            if (confirm('آیا از پاک کردن کل اطلاعات اطمینان دارید؟')) {
-                localStorage.clear();
-                location.reload();
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('alcapone_user');
+    function resetAll() {
+        if(confirm("آیا از حذف کل اطلاعات مطمئن هستید؟")) {
+            localStorage.clear();
             location.reload();
         }
+    }
 
-        function toggle(id) {
-            const el = document.getElementById(id);
-            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
-        }
-    </script>
+    function logout() { location.reload(); }
+</script>
+
 </body>
 </html>
