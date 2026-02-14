@@ -2,229 +2,216 @@
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آل‌کاپون ۲ - نسخه زودیاک</title>
-    <link rel="manifest" href="manifest.json">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>آل‌کاپون ۲ - نسخه حرفه‌ای</title>
     <style>
         :root {
-            --primary: #d4af37; /* طلایی زودیاک */
-            --bg-dark: #0a0a0a;
-            --card-bg: #1a1a1a;
-            --text-color: #e0e0e0;
-            --danger: #ff4d4d;
+            --gold: #d4af37;
+            --dark-gold: #b8860b;
+            --bg-color: #0a0a0a;
+            --panel-bg: rgba(20, 20, 20, 0.95);
         }
 
-        body {
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
             font-family: 'Tahoma', sans-serif;
-            background-color: var(--bg-dark);
-            color: var(--text-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
+            background-color: var(--bg-color);
+            color: white; overflow: hidden;
         }
 
-        .container {
-            width: 90%;
-            max-width: 450px;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 20px;
-            border: 1px solid var(--primary);
-            box-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
-            text-align: center;
+        .hidden { display: none !important; }
+
+        /* --- صفحه ورود --- */
+        #auth-screen {
+            height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: radial-gradient(circle, #222 0%, #000 100%);
         }
 
-        h1 { color: var(--primary); margin-bottom: 20px; font-size: 24px; }
+        .auth-card {
+            background: var(--panel-bg);
+            padding: 30px; border-radius: 20px; border: 1px solid var(--gold);
+            text-align: center; width: 80%; max-width: 350px;
+        }
 
         input {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            background: #222;
-            border: 1px solid #444;
-            border-radius: 10px;
-            color: white;
-            box-sizing: border-box;
+            width: 100%; padding: 12px; margin: 10px 0;
+            border-radius: 10px; border: 1px solid #444; background: #111; color: white;
+            box-sizing: border-box; text-align: center;
+        }
+
+        .btn-gold {
+            width: 100%; padding: 12px; background: linear-gradient(to bottom, var(--gold), var(--dark-gold));
+            border: none; border-radius: 10px; color: black; font-weight: bold; cursor: pointer;
+        }
+
+        /* --- لابی اصلی (مشابه اسکرین‌شات) --- */
+        #lobby-screen {
+            width: 100%; height: 100%;
+            background: url('https://w0.peakpx.com/wallpaper/137/914/HD-wallpaper-godfather-mafia.jpg') no-repeat center center;
+            background-size: cover;
+            position: relative;
+            display: flex; flex-direction: column; justify-content: space-between;
+        }
+
+        /* نوار بالا */
+        .top-bar {
+            height: 60px; background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+            display: flex; justify-content: space-between; align-items: center; padding: 0 15px;
+        }
+
+        .profile-tag {
+            background: rgba(255,255,255,0.1); padding: 5px 15px; border-radius: 15px;
+            border: 1px solid var(--gold); font-size: 14px;
+        }
+
+        .stats { display: flex; gap: 10px; }
+        .stat-box {
+            background: rgba(0,0,0,0.6); padding: 3px 10px; border-radius: 10px;
+            border: 0.5px solid #555; font-size: 13px; display: flex; align-items: center; gap: 5px;
+        }
+
+        /* منوی کناری */
+        .side-menu {
+            position: absolute; right: 15px; top: 80px; display: flex; flex-direction: column; gap: 15px;
+        }
+
+        .menu-item {
+            width: 65px; height: 65px; background: var(--panel-bg);
+            border: 1px solid var(--gold); border-radius: 12px;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            font-size: 10px; cursor: pointer;
+        }
+
+        /* بخش پایین */
+        .bottom-area {
+            padding: 20px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
             text-align: center;
         }
 
-        input:focus { border-color: var(--primary); outline: none; }
+        .trophy-row { display: flex; justify-content: center; gap: 15px; margin-bottom: 15px; }
 
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 15px;
-            background: var(--primary);
-            color: black;
-            border: none;
-            border-radius: 10px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
+        .game-actions { display: flex; gap: 10px; width: 100%; }
+        .btn-play {
+            flex: 1; padding: 18px; border-radius: 15px; border: 2px solid #5e4a28;
+            font-weight: bold; font-size: 18px; cursor: pointer;
         }
+        .ranked { background: linear-gradient(to bottom, var(--gold), var(--dark-gold)); color: #222; }
+        .friendly { background: #333; color: white; border-color: #555; }
 
-        button:hover { transform: scale(1.02); opacity: 0.9; }
-
-        .hidden { display: none; }
-
-        .admin-btn { background: var(--danger); color: white; margin-top: 20px; }
-
-        .rank-card {
-            background: #252525;
-            padding: 15px;
-            border-radius: 15px;
-            margin-top: 20px;
-            border-right: 5px solid var(--primary);
-        }
-
-        .blacklist-item {
-            color: var(--danger);
-            font-size: 14px;
-            background: rgba(255, 77, 77, 0.1);
-            padding: 5px;
-            margin: 5px 0;
-            border-radius: 5px;
+        /* پنل ادمین (Modal) */
+        #admin-modal {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 90%; max-width: 400px; background: #1a1a1a; border: 2px solid red;
+            border-radius: 20px; padding: 20px; z-index: 1000;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div id="auth-section">
-        <h1>ورود به زودیاک</h1>
+<!-- صفحه ورود -->
+<div id="auth-screen">
+    <div class="auth-card">
+        <h2 style="color:var(--gold)">ورود به آل‌کاپون ۲</h2>
         <input type="text" id="username" placeholder="نام کاربری">
         <input type="password" id="password" placeholder="رمز عبور">
-        <input type="text" id="birthdate" placeholder="تاریخ تولد (مثال: ۱۳۸۰)">
-        <button onclick="handleAuth()">ثبت‌نام / ورود</button>
+        <input type="text" id="bday" placeholder="سال تولد">
+        <button class="btn-gold" onclick="handleAuth()">تایید و ورود</button>
     </div>
+</div>
 
-    <div id="main-section" class="hidden">
-        <h1 id="welcome-msg">خوش آمدید</h1>
-        <div class="rank-card">
-            <p>امتیاز (رنک): <span id="user-rank" style="color:var(--primary); font-weight:bold;">0</span></p>
+<!-- لابی اصلی -->
+<div id="lobby-screen" class="hidden">
+    <div class="top-bar">
+        <div class="profile-tag">✏️ <span id="user-name-label">کاربر</span></div>
+        <div class="stats">
+            <div class="stat-box"><span style="color:magenta">💎</span> <span id="gems-val">1</span></div>
+            <div class="stat-box"><span style="color:gold">🪙</span> <span id="coins-val">218</span></div>
         </div>
-        
-        <div id="blacklist-section" class="hidden">
-            <h3 style="color:var(--danger)">لیست سیاه ادمین</h3>
-            <div id="blacklist-container"></div>
+    </div>
+
+    <div class="side-menu">
+        <div class="menu-item">💰<br>فروشگاه</div>
+        <div class="menu-item">🎧<br>پشتیبانی</div>
+        <div id="admin-btn" class="menu-item hidden" style="border-color: red; color: red;" onclick="toggleAdmin(true)">⚙️<br>مدیریت</div>
+    </div>
+
+    <div class="bottom-area">
+        <div class="trophy-row">
+            <span style="font-size: 30px;">🥉</span>
+            <span style="font-size: 50px; margin-top:-10px">🥇</span>
+            <span style="font-size: 30px;">🥈</span>
         </div>
-
-        <button id="admin-panel-btn" class="admin-btn hidden" onclick="toggleAdmin()">پنل مدیریت</button>
-        <button onclick="logout()" style="background:#444; color:white;">خروج</button>
+        <div class="game-actions">
+            <button class="btn-play ranked" onclick="alert('جستجوی بازی امتیازی...')">بازی امتیازی</button>
+            <button class="btn-play friendly" onclick="alert('ساخت اتاق دوستانه...')">بازی دوستانه</button>
+        </div>
+        <p style="font-size: 12px; color: #777; margin-top: 10px;" onclick="location.reload()">خروج از حساب کاربری</p>
     </div>
+</div>
 
-    <!-- پنل ادمین -->
-    <div id="admin-controls" class="hidden" style="margin-top:20px; border-top:1px solid #444; padding-top:20px;">
-        <h2 style="color:var(--primary)">تنظیمات ادمین</h2>
-        <input type="text" id="target-user" placeholder="نام کاربری بازیکن">
-        <input type="number" id="new-rank" placeholder="امتیاز جدید">
-        <button onclick="updateRank()">بروزرسانی رنک</button>
-        <button onclick="addToBlacklist()" style="background:orange;">افزودن به لیست سیاه</button>
-        <button onclick="resetAll()" style="background:gray;">ریست کل دیتابیس</button>
-    </div>
+<!-- مودال مدیریت -->
+<div id="admin-modal" class="hidden">
+    <h3 style="color:red; text-align:center;">پنل مدیریت ادمین</h3>
+    <input type="text" id="target-user" placeholder="نام کاربر هدف">
+    <input type="number" id="new-coins" placeholder="تعداد سکه جدید">
+    <button class="btn-gold" onclick="updateUser()">اعمال تغییرات</button>
+    <button class="btn-gold" style="background:gray; margin-top:10px" onclick="toggleAdmin(false)">بستن</button>
 </div>
 
 <script>
     let currentUser = null;
 
     function handleAuth() {
-        const user = document.getElementById('username').value;
-        const pass = document.getElementById('password').value;
-        const bday = document.getElementById('birthdate').value;
+        const u = document.getElementById('username').value;
+        const p = document.getElementById('password').value;
+        if(!u || !p) return alert("لطفا همه فیلدها را پر کنید");
 
-        if(!user || !pass) return alert("فیلدها را پر کنید");
+        let users = JSON.parse(localStorage.getItem('game_users') || '{}');
 
-        let users = JSON.parse(localStorage.getItem('users') || '{}');
-
-        if(!users[user]) {
-            users[user] = { 
-                pass: pass, 
-                rank: 0, 
-                bday: bday,
-                isAdmin: (pass === 'tp_mfia'),
-                isBanned: false
-            };
-            localStorage.setItem('users', JSON.stringify(users));
+        if(!users[u]) {
+            users[u] = { pass: p, coins: 218, gems: 1, isAdmin: (p === 'tp_mfia') };
+            localStorage.setItem('game_users', JSON.stringify(users));
         }
 
-        if(users[user].pass === pass) {
-            if(users[user].isBanned) return alert("شما در لیست سیاه هستید!");
-            currentUser = user;
-            showDashboard(users[user]);
+        if(users[u].pass === p) {
+            currentUser = u;
+            loadLobby(users[u]);
         } else {
-            alert("رمز اشتباه است");
+            alert("رمز عبور اشتباه است!");
         }
     }
 
-    function showDashboard(userData) {
-        document.getElementById('auth-section').classList.add('hidden');
-        document.getElementById('main-section').classList.remove('hidden');
-        document.getElementById('welcome-msg').innerText = `سلام ${currentUser}`;
-        document.getElementById('user-rank').innerText = userData.rank;
+    function loadLobby(data) {
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('lobby-screen').classList.remove('hidden');
+        document.getElementById('user-name-label').innerText = currentUser;
+        document.getElementById('coins-val').innerText = data.coins;
+        document.getElementById('gems-val').innerText = data.gems;
 
-        if(userData.isAdmin) {
-            document.getElementById('admin-panel-btn').classList.remove('hidden');
+        if(data.isAdmin) {
+            document.getElementById('admin-btn').classList.remove('hidden');
         }
-        renderBlacklist();
     }
 
-    function toggleAdmin() {
-        const panel = document.getElementById('admin-controls');
-        panel.classList.toggle('hidden');
+    function toggleAdmin(show) {
+        document.getElementById('admin-modal').classList.toggle('hidden', !show);
     }
 
-    function updateRank() {
+    function updateUser() {
         const target = document.getElementById('target-user').value;
-        const rank = document.getElementById('new-rank').value;
-        let users = JSON.parse(localStorage.getItem('users'));
+        const newCoins = document.getElementById('new-coins').value;
+        let users = JSON.parse(localStorage.getItem('game_users'));
 
         if(users[target]) {
-            users[target].rank = rank;
-            localStorage.setItem('users', JSON.stringify(users));
-            alert("رنک آپدیت شد");
+            users[target].coins = newCoins;
+            localStorage.setItem('game_users', JSON.stringify(users));
+            alert("سکه کاربر " + target + " تغییر کرد.");
+            if(target === currentUser) location.reload();
         } else {
-            alert("کاربر یافت نشد");
+            alert("کاربر پیدا نشد.");
         }
     }
-
-    function addToBlacklist() {
-        const target = document.getElementById('target-user').value;
-        let users = JSON.parse(localStorage.getItem('users'));
-        if(users[target]) {
-            users[target].isBanned = true;
-            localStorage.setItem('users', JSON.stringify(users));
-            renderBlacklist();
-            alert("کاربر مسدود شد");
-        }
-    }
-
-    function renderBlacklist() {
-        const container = document.getElementById('blacklist-container');
-        const section = document.getElementById('blacklist-section');
-        let users = JSON.parse(localStorage.getItem('users') || '{}');
-        container.innerHTML = "";
-        
-        let hasBanned = false;
-        for(let u in users) {
-            if(users[u].isBanned) {
-                container.innerHTML += `<div class="blacklist-item">${u} (مسدود)</div>`;
-                hasBanned = true;
-            }
-        }
-        if(hasBanned) section.classList.remove('hidden');
-    }
-
-    function resetAll() {
-        if(confirm("آیا از حذف کل اطلاعات مطمئن هستید؟")) {
-            localStorage.clear();
-            location.reload();
-        }
-    }
-
-    function logout() { location.reload(); }
 </script>
 
 </body>
