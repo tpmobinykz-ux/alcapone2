@@ -1,35 +1,40 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>Zodiac Mafia - Web</title>
+  <title>Zodiac Web</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<header>
-  <h1>🎭 Zodiac Mafia</h1>
-</header>
+<div id="app">
 
-<main id="app">
+  <!-- HEADER -->
+  <header id="header">
+    <span id="phaseTitle">روز اول</span>
+  </header>
 
-  <section id="setup">
-    <h2>شروع بازی</h2>
-    <button onclick="startGame()">شروع با ۶ بازیکن</button>
+  <!-- LOBBY -->
+  <section id="lobby">
+    <h2>لابی بازی</h2>
+    <button onclick="startMatch()">شروع بازی</button>
   </section>
 
+  <!-- WAITING ROOM -->
+  <section id="waiting" class="hidden">
+    <h3>در حال یافتن بازیکنان...</h3>
+    <p id="timer">زمان سپری شده: 0 ثانیه</p>
+    <div id="slots"></div>
+  </section>
+
+  <!-- GAME -->
   <section id="game" class="hidden">
-    <h2 id="phaseTitle"></h2>
-    <div id="players"></div>
-    <button id="nextBtn" onclick="nextPhase()">مرحله بعد</button>
+    <h3 id="gameInfo"></h3>
+    <div id="playersArea"></div>
+    <div id="controls"></div>
   </section>
 
-  <section id="result" class="hidden">
-    <h2 id="winnerText"></h2>
-    <button onclick="location.reload()">بازی جدید</button>
-  </section>
-
-</main>
+</div>
 
 <script src="logic.js"></script>
 <script src="ui.js"></script>
