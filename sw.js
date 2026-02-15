@@ -1,21 +1,48 @@
-const auth = document.getElementById("auth");
-const lobby = document.getElementById("lobby");
-const coins = document.getElementById("coins");
-const gems = document.getElementById("gems");
+/* ===============================
+   Zodiac Mafia – Service Worker
+   =============================== */
 
-function guestLogin() {
-  const guestData = {
-    coins: 100,
-    gems: 10
-  };
+const CACHE_NAME = "zodiac-mafia-v1";
 
-  // ذخیره وضعیت مهمان
-  localStorage.setItem("alcapone_guest", JSON.stringify(guestData));
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./style.css",
+  "./game.js",
+  "./logic.js",
+  "./ui.js",
+  "./manifest.json"
+];
 
-  // رفتن به لابی
-  auth.classList.add("hidden");
-  lobby.classList.remove("hidden");
+/* نصب */
+self.addEventListener("install", event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(ASSETS);
+    })
+  );
+  self.skipWaiting();
+});
 
-  coins.innerText = "🪙 " + guestData.coins;
-  gems.innerText = "💎 " + guestData.gems;
-}
+/* فعال‌سازی */
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys
+          .filter(key => key !== CACHE_NAME)
+          .map(key => caches.delete(key))
+      );
+    })
+  );
+  self.clients.claim();
+});
+
+/* دریافت درخواست‌ها */
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    caches.match(event.request).then(response => {
+      return response || fetch(event.request);
+    })
+  );
+});
