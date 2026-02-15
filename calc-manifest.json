@@ -1,0 +1,18 @@
+{
+  "short_name": "ماشین‌حساب",
+  "name": "ماشین حساب مخفی TP",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/564/564429.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "tp_mfia.html",
+  "background_color": "#1a1a1a",
+  "display": "standalone",
+  "scope": "./",
+  "theme_color": "#000000",
+  "description": "یک ماشین حساب ساده با قابلیت‌های مخفی"
+}
