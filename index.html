@@ -2,188 +2,36 @@
 <html lang="fa">
 <head>
   <meta charset="UTF-8">
-  <title>Game Lobby</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: sans-serif;
-    }
-
-    body {
-      margin: 0;
-      background: #111;
-      color: #fff;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    /* ✅ وسط‌چین کامل صفحه */
-    .container {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .box {
-      background: #1e1e1e;
-      padding: 25px;
-      border-radius: 10px;
-      width: 300px;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 6px;
-      border: none;
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 6px;
-      background: #4caf50;
-      color: white;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    button.secondary {
-      background: #2196f3;
-    }
-
-    .switch {
-      margin-top: 15px;
-      font-size: 14px;
-      cursor: pointer;
-      color: #aaa;
-    }
-
-    .stats {
-      margin-top: 20px;
-      font-size: 18px;
-    }
-  </style>
+  <title>ALCAPONE</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- ✅ AUTH -->
+<!-- TITLE -->
+<header class="title">
+  ALCAPONE
+</header>
+
+<!-- AUTH -->
 <div id="auth" class="container">
-  <div class="box">
+  <h2>Welcome to ALCAPONE</h2>
 
-    <!-- LOGIN -->
-    <div id="loginBox">
-      <h2>ورود</h2>
-      <input id="loginUser" placeholder="نام کاربری">
-      <input id="loginPass" type="password" placeholder="رمز عبور">
-      <button onclick="login()">ورود</button>
-      <div class="switch" onclick="showRegister()">ثبت‌نام</div>
-    </div>
+  <button disabled>ورود</button>
+  <button disabled>ثبت نام</button>
 
-    <!-- REGISTER -->
-    <div id="registerBox" class="hidden">
-      <h2>ثبت‌نام</h2>
-      <input id="regUser" placeholder="نام کاربری">
-      <input id="regPass" type="password" placeholder="رمز عبور">
-      <input id="regAge" type="number" placeholder="سن">
-      <button class="secondary" onclick="register()">ثبت‌نام</button>
-      <div class="switch" onclick="showLogin()">ورود</div>
-    </div>
-
-  </div>
+  <button class="guest" onclick="guestLogin()">ورود مهمان</button>
 </div>
 
-<!-- ✅ LOBBY -->
-<div id="lobby" class="container hidden">
-  <div class="box">
-    <h2>🎮 لابی بازی</h2>
-    <div class="stats">
-      🪙 سکه: <span id="coins">0</span><br>
-      💎 جم: <span id="gems">0</span>
-    </div>
+<!-- LOBBY -->
+<div id="lobby" class="hidden">
+  <div class="hud">
+    <div id="coins">🪙 0</div>
+    <div id="gems">💎 0</div>
   </div>
+
+  <h2 class="welcome">🎮 ALCAPONE Lobby</h2>
 </div>
 
-<script>
-  const auth = document.getElementById("auth");
-  const lobby = document.getElementById("lobby");
-
-  const loginBox = document.getElementById("loginBox");
-  const registerBox = document.getElementById("registerBox");
-
-  const loginUser = document.getElementById("loginUser");
-  const loginPass = document.getElementById("loginPass");
-
-  const regUser = document.getElementById("regUser");
-  const regPass = document.getElementById("regPass");
-  const regAge = document.getElementById("regAge");
-
-  const coins = document.getElementById("coins");
-  const gems = document.getElementById("gems");
-
-  function showRegister() {
-    loginBox.classList.add("hidden");
-    registerBox.classList.remove("hidden");
-  }
-
-  function showLogin() {
-    registerBox.classList.add("hidden");
-    loginBox.classList.remove("hidden");
-  }
-
-  function register() {
-    const user = regUser.value.trim();
-    const pass = regPass.value.trim();
-    const age = regAge.value.trim();
-
-    if (!user || !pass || !age) {
-      alert("همه فیلدها را پر کن");
-      return;
-    }
-
-    if (localStorage.getItem("user_" + user)) {
-      alert("این نام کاربری قبلاً ثبت شده");
-      return;
-    }
-
-    const data = {
-      pass: pass,
-      age: age,
-      coins: 100,
-      gems: 10
-    };
-
-    localStorage.setItem("user_" + user, JSON.stringify(data));
-    alert("ثبت‌نام موفق ✅");
-    showLogin();
-  }
-
-  function login() {
-    const user = loginUser.value.trim();
-    const pass = loginPass.value.trim();
-
-    const data = JSON.parse(localStorage.getItem("user_" + user));
-
-    if (!data || data.pass !== pass) {
-      alert("نام کاربری یا رمز اشتباه است");
-      return;
-    }
-
-    // ✅ ورود مستقیم به لابی
-    auth.classList.add("hidden");
-    lobby.classList.remove("hidden");
-
-    coins.innerText = data.coins;
-    gems.innerText = data.gems;
-  }
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
