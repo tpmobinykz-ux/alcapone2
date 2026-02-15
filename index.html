@@ -1,37 +1,38 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>ALCAPONE</title>
+  <title>Zodiac Mafia - Web</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- TITLE -->
-<header class="title">
-  ALCAPONE
+<header>
+  <h1>🎭 Zodiac Mafia</h1>
 </header>
 
-<!-- AUTH -->
-<div id="auth" class="container">
-  <h2>Welcome to ALCAPONE</h2>
+<main id="app">
 
-  <button disabled>ورود</button>
-  <button disabled>ثبت نام</button>
+  <section id="setup">
+    <h2>شروع بازی</h2>
+    <button onclick="startGame()">شروع با ۶ بازیکن</button>
+  </section>
 
-  <button class="guest" onclick="guestLogin()">ورود مهمان</button>
-</div>
+  <section id="game" class="hidden">
+    <h2 id="phaseTitle"></h2>
+    <div id="players"></div>
+    <button id="nextBtn" onclick="nextPhase()">مرحله بعد</button>
+  </section>
 
-<!-- LOBBY -->
-<div id="lobby" class="hidden">
-  <div class="hud">
-    <div id="coins">🪙 0</div>
-    <div id="gems">💎 0</div>
-  </div>
+  <section id="result" class="hidden">
+    <h2 id="winnerText"></h2>
+    <button onclick="location.reload()">بازی جدید</button>
+  </section>
 
-  <h2 class="welcome">🎮 ALCAPONE Lobby</h2>
-</div>
+</main>
 
-<script src="script.js"></script>
+<script src="logic.js"></script>
+<script src="ui.js"></script>
+<script src="game.js"></script>
 </body>
 </html>
