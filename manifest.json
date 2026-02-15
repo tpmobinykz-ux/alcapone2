@@ -1,16 +1,85 @@
-{
-  "name": "Al Capone 2",
-  "short_name": "AlCapone2",
-  "start_url": "index.html",
-  "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#00ffd0",
-  "orientation": "portrait",
-  "icons": [
-    {
-      "src": "https://raw.githubusercontent.com/tpmobinykz-ux/alcapone2/main/icon.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  background: #0b0b0b;
+  color: white;
+}
+
+/* HEADER TITLE */
+.title {
+  text-align: center;
+  padding: 18px 0;
+  font-size: 32px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #c9a227, #f5d76e);
+  color: black;
+}
+
+/* AUTH */
+.container {
+  height: calc(100vh - 80px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+}
+
+button {
+  width: 220px;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+}
+
+button:disabled {
+  opacity: 0.4;
+}
+
+button.guest {
+  background: #00e676;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* LOBBY */
+.hidden {
+  display: none;
+}
+
+#lobby {
+  height: calc(100vh - 80px);
+  background: radial-gradient(circle at top, #1f3c88, #000);
+  padding: 20px;
+  position: relative;
+}
+
+.hud {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  text-align: right;
+}
+
+#coins {
+  font-size: 18px;
+}
+
+#gems {
+  font-size: 16px;
+  margin-top: 6px;
+  margin-right: 20px;
+}
+
+.welcome {
+  text-align: center;
+  margin-top: 120px;
 }
