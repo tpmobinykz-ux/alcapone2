@@ -1,54 +1,43 @@
 body {
-  margin: 0;
-  font-family: sans-serif;
-  background: #0f0f0f;
+  background: #111;
   color: #fff;
+  font-family: sans-serif;
   text-align: center;
 }
 
-header {
-  background: #1c1c1c;
+.hidden { display: none; }
+
+#header {
   padding: 15px;
   font-size: 20px;
-}
-
-main {
-  padding: 20px;
+  background: #000;
 }
 
 button {
   padding: 10px 20px;
   margin: 10px;
-  background: #8b0000;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
   cursor: pointer;
 }
 
-button:hover {
-  background: #a80000;
-}
-
-.hidden {
-  display: none;
-}
-
-#players {
+#slots {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(3, 60px);
+  gap: 15px;
+  justify-content: center;
   margin-top: 20px;
 }
 
-.player {
-  background: #1e1e1e;
-  padding: 10px;
-  border-radius: 8px;
+.slot {
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: #555;
 }
 
-.dead {
-  opacity: 0.4;
-  text-decoration: line-through;
+.slot.active {
+  background: #2ecc71;
+}
+
+.player {
+  margin: 5px;
 }
