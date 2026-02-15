@@ -1,180 +1,188 @@
 <!DOCTYPE html>
 <html lang="fa">
 <head>
-<meta charset="UTF-8">
-<title>Game System</title>
-<style>
-body {
-  font-family: sans-serif;
-  background: #121212;
-  color: #fff;
-  margin: 0;
-}
+  <meta charset="UTF-8">
+  <title>Game Lobby</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: sans-serif;
+    }
 
-.hidden { display: none; }
+    body {
+      margin: 0;
+      background: #111;
+      color: #fff;
+    }
 
-.container {
-  padding: 20px;
-  text-align: center;
-}
+    .hidden {
+      display: none;
+    }
 
-input, button, textarea {
-  padding: 10px;
-  margin: 5px;
-  border-radius: 6px;
-  border: none;
-}
+    /* ✅ وسط‌چین کامل صفحه */
+    .container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
 
-button {
-  cursor: pointer;
-  background: #ff9800;
-  color: #000;
-}
+    .box {
+      background: #1e1e1e;
+      padding: 25px;
+      border-radius: 10px;
+      width: 300px;
+    }
 
-#lobby {
-  position: relative;
-  height: 100vh;
-  background: linear-gradient(#1e1e1e, #000);
-}
+    input {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: none;
+    }
 
-.top-right {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
+    button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 6px;
+      background: #4caf50;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
 
-.bottom-right {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-}
+    button.secondary {
+      background: #2196f3;
+    }
 
-.bottom-left {
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
-}
+    .switch {
+      margin-top: 15px;
+      font-size: 14px;
+      cursor: pointer;
+      color: #aaa;
+    }
 
-.box {
-  background: rgba(0,0,0,0.6);
-  padding: 10px;
-  border-radius: 8px;
-}
-</style>
+    .stats {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
 </head>
 <body>
 
-<!-- AUTH -->
+<!-- ✅ AUTH -->
 <div id="auth" class="container">
-  <h2>ورود / ثبت نام</h2>
-  <button onclick="showLogin()">ورود</button>
-  <button onclick="showRegister()">ثبت نام</button>
+  <div class="box">
 
-  <div id="login" class="hidden">
-    <input id="loginUser" placeholder="نام کاربری">
-    <input id="loginPass" type="password" placeholder="رمز عبور">
-    <button onclick="login()">ورود</button>
-  </div>
+    <!-- LOGIN -->
+    <div id="loginBox">
+      <h2>ورود</h2>
+      <input id="loginUser" placeholder="نام کاربری">
+      <input id="loginPass" type="password" placeholder="رمز عبور">
+      <button onclick="login()">ورود</button>
+      <div class="switch" onclick="showRegister()">ثبت‌نام</div>
+    </div>
 
-  <div id="register" class="hidden">
-    <input id="regUser" placeholder="نام کاربری">
-    <input id="regPass" type="password" placeholder="رمز عبور">
-    <input id="regAge" type="number" placeholder="سن">
-    <button onclick="register()">ثبت نام</button>
+    <!-- REGISTER -->
+    <div id="registerBox" class="hidden">
+      <h2>ثبت‌نام</h2>
+      <input id="regUser" placeholder="نام کاربری">
+      <input id="regPass" type="password" placeholder="رمز عبور">
+      <input id="regAge" type="number" placeholder="سن">
+      <button class="secondary" onclick="register()">ثبت‌نام</button>
+      <div class="switch" onclick="showLogin()">ورود</div>
+    </div>
+
   </div>
 </div>
 
-<!-- LOBBY -->
-<div id="lobby" class="hidden">
-  <div class="top-right box">
-    🪙 <span id="coins">0</span>
-    &nbsp;&nbsp;
-    💎 <span id="gems">0</span>
-  </div>
-
-  <div class="bottom-right box">
-    <h4>📦 صندوق گزارشات</h4>
-    <textarea id="reportText" placeholder="متن گزارش"></textarea><br>
-    <button onclick="sendReport()">ارسال گزارش</button>
-    <hr>
-    <input id="viewPass1" placeholder="رمز درخواست">
-    <input id="viewPass2" placeholder="رمز مشاهده">
-    <button onclick="viewReports()">مشاهده</button>
-    <div id="reports"></div>
-  </div>
-
-  <div class="bottom-left box">
-    <button onclick="toggleRules()">📜 قوانین بازی</button>
-    <div id="rules" class="hidden">
-      <p>1. هرگونه توهین و فحاشی به هم بازی خود ممنوع است</p>
-      <p>2. برای اینکه بازی در فضای محترمانه باشد می‌توانید کاربر متخلف را گزارش بزنید</p>
-      <p>3. استفاده از چند اکانت همزمان با تبانی کردن ممنوع است و در صورت مشاهده برخورد می‌شود</p>
-      <p>4. راه انداختن هرگونه بحث سیاسی ممنوع است</p>
+<!-- ✅ LOBBY -->
+<div id="lobby" class="container hidden">
+  <div class="box">
+    <h2>🎮 لابی بازی</h2>
+    <div class="stats">
+      🪙 سکه: <span id="coins">0</span><br>
+      💎 جم: <span id="gems">0</span>
     </div>
   </div>
 </div>
 
 <script>
-function showLogin() {
-  login.classList.remove("hidden");
-  register.classList.add("hidden");
-}
+  const auth = document.getElementById("auth");
+  const lobby = document.getElementById("lobby");
 
-function showRegister() {
-  register.classList.remove("hidden");
-  login.classList.add("hidden");
-}
+  const loginBox = document.getElementById("loginBox");
+  const registerBox = document.getElementById("registerBox");
 
-function register() {
-  const user = regUser.value;
-  const pass = regPass.value;
-  const age = regAge.value;
+  const loginUser = document.getElementById("loginUser");
+  const loginPass = document.getElementById("loginPass");
 
-  if (!user || !pass || !age) return alert("همه فیلدها الزامی است");
+  const regUser = document.getElementById("regUser");
+  const regPass = document.getElementById("regPass");
+  const regAge = document.getElementById("regAge");
 
-  localStorage.setItem("user_"+user, JSON.stringify({
-    user, pass, age, coins: 120, gems: 0
-  }));
+  const coins = document.getElementById("coins");
+  const gems = document.getElementById("gems");
 
-  alert("ثبت نام انجام شد");
-}
+  function showRegister() {
+    loginBox.classList.add("hidden");
+    registerBox.classList.remove("hidden");
+  }
 
-function login() {
-  const user = loginUser.value;
-  const pass = loginPass.value;
-  const data = JSON.parse(localStorage.getItem("user_"+user));
+  function showLogin() {
+    registerBox.classList.add("hidden");
+    loginBox.classList.remove("hidden");
+  }
 
-  if (!data || data.pass !== pass) return alert("اطلاعات اشتباه است");
+  function register() {
+    const user = regUser.value.trim();
+    const pass = regPass.value.trim();
+    const age = regAge.value.trim();
 
-  auth.classList.add("hidden");
-  lobby.classList.remove("hidden");
+    if (!user || !pass || !age) {
+      alert("همه فیلدها را پر کن");
+      return;
+    }
 
-  coins.innerText = data.coins;
-  gems.innerText = data.gems;
-}
+    if (localStorage.getItem("user_" + user)) {
+      alert("این نام کاربری قبلاً ثبت شده");
+      return;
+    }
 
-function sendReport() {
-  const text = reportText.value;
-  if (!text) return;
-  const reports = JSON.parse(localStorage.getItem("reports") || "[]");
-  reports.push(text);
-  localStorage.setItem("reports", JSON.stringify(reports));
-  alert("گزارش ارسال شد");
-  reportText.value = "";
-}
+    const data = {
+      pass: pass,
+      age: age,
+      coins: 100,
+      gems: 10
+    };
 
-function viewReports() {
-  if (viewPass1.value !== "req123" || viewPass2.value !== "view456")
-    return alert("رمز اشتباه");
+    localStorage.setItem("user_" + user, JSON.stringify(data));
+    alert("ثبت‌نام موفق ✅");
+    showLogin();
+  }
 
-  const reports = JSON.parse(localStorage.getItem("reports") || "[]");
-  reportsDiv = reports.map(r => "<p>📩 "+r+"</p>").join("");
-  reports.innerHTML = reportsDiv;
-}
+  function login() {
+    const user = loginUser.value.trim();
+    const pass = loginPass.value.trim();
 
-function toggleRules() {
-  rules.classList.toggle("hidden");
-}
+    const data = JSON.parse(localStorage.getItem("user_" + user));
+
+    if (!data || data.pass !== pass) {
+      alert("نام کاربری یا رمز اشتباه است");
+      return;
+    }
+
+    // ✅ ورود مستقیم به لابی
+    auth.classList.add("hidden");
+    lobby.classList.remove("hidden");
+
+    coins.innerText = data.coins;
+    gems.innerText = data.gems;
+  }
 </script>
 
 </body>
