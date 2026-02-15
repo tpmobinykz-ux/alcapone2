@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماشین حساب هوشمند</title>
+    <!-- اتصال به فایل مانیفست برای تبدیل شدن به اپلیکیشن -->
+    <link rel="manifest" href="manifest.json">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: sans-serif;
+        }
+        .calc-container {
+            background: #000;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 300px;
+        }
+        #display {
+            width: 100%;
+            height: 60px;
+            background: #222;
+            color: #fff;
+            border: none;
+            text-align: right;
+            padding: 10px;
+            font-size: 2rem;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            height: 60px;
+            border-radius: 10px;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: 0.2s;
+            color: white;
+            background: #333;
+        }
+        button:active { transform: scale(0.95); }
+        .operator { background: #f39c12; }
+        .equals { background: #27ae60; grid-column: span 2; }
+        .clear { background: #c0392b; grid-column: span 2; }
+
+        /* استایل گالری مخفی */
+        #secret-gallery {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            color: #fff;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .gallery-item {
+            background: #222;
+            height: 150px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px dashed #444;
+        }
+        .close-btn {
+            background: #f39c12;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calc-container">
+        <input type="text" id="display" readonly placeholder="0">
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button class="operator" onclick="addToDisplay('/')">/</button>
+            <button class="operator" onclick="addToDisplay('*')">*</button>
+            
+            <button onclick="addToDisplay('7')">7</button>
+            <button onclick="addToDisplay('8')">8</button>
+            <button onclick="addToDisplay('9')">9</button>
+            <button class="operator" onclick="addToDisplay('-')">-</button>
+            
+            <button onclick="addToDisplay('4')">4</button>
+            <button onclick="addToDisplay('5')">5</button>
+            <button onclick="addToDisplay('6')">6</button>
+            <button class="operator" onclick="addToDisplay('+')">+</button>
+            
+            <button onclick="addToDisplay('1')">1</button>
+            <button onclick="addToDisplay('2')">2</button>
+            <button onclick="addToDisplay('3')">3</button>
+            <button onclick="calculate()">=</button>
+            
+            <button onclick="addToDisplay('0')" style="grid-column: span 2;">0</button>
+            <button onclick="addToDisplay('.')">.</button>
+        </div>
+    </div>
+
+    <!-- گالری مخفی که فقط با کد 5+7+7 باز می‌شود -->
+    <div id="secret-gallery">
+        <div class="close-btn" onclick="closeGallery()">بازگشت به ماشین حساب</div>
+        <h2>گالری مخفی ادمین 🕵️‍♂️</h2>
+        <p>خوش آمدید! محتوای مخفی در اینجا نمایش داده می‌شود.</p>
+        <div class="gallery-grid">
+            <div class="gallery-item">تصویر ۱</div>
+            <div class="gallery-item">تصویر ۲</div>
+            <div class="gallery-item">گزارش‌ها</div>
+            <div class="gallery-item">تنظیمات</div>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById('display');
+
+        function addToDisplay(value) {
+            display.value += value;
+        }
+
+        function clearDisplay() {
+            display.value = '';
+        }
+
+        function calculate() {
+            let expression = display.value;
+            
+            // بررسی کد جادویی 5+7+7
+            if (expression === "5+7+7") {
+                openSecretGallery();
+                clearDisplay();
+                return;
+            }
+
+            try {
+                display.value = eval(expression);
+            } catch (e) {
+                display.value = 'Error';
+                setTimeout(clearDisplay, 1000);
+            }
+        }
+
+        function openSecretGallery() {
+            document.getElementById('secret-gallery').style.display = 'block';
+        }
+
+        function closeGallery() {
+            document.getElementById('secret-gallery').style.display = 'none';
+        }
+
+        // ثبت Service Worker برای قابلیت نصب (PWA)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js');
+            });
+        }
+    </script>
+</body>
+</html>
